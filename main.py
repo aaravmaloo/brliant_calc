@@ -21,3 +21,6 @@ if arguments.command == "basic":
     if arguments.operation == "mul":
         res = basic_ops.mul(*arguments.numbers)
         print(f"{res:g}")
+    if arguments.operation == "div":
+        res = basic_ops.div(*arguments.numbers)
+        print(f"{res:g}")
