@@ -15,3 +15,9 @@ if arguments.command == "basic":
     if arguments.operation == "add":
         res = basic_ops.add(*arguments.numbers)
         print(f"{res:g}")
+    if arguments.operation == "sub":
+        res = basic_ops.sub(*arguments.numbers)
+        print(f"{res:g}")
+    if arguments.operation == "mul":
+        res = basic_ops.mul(*arguments.numbers)
+        print(f"{res:g}")
