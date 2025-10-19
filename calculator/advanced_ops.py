@@ -44,3 +44,4 @@ def log10(*args):
         return "logarithm is undefined for non-positive values."
     
     return np.log10(value)
+
