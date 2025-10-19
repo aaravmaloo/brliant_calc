@@ -11,7 +11,7 @@ basic_parser.add_argument("numbers", type=float, nargs="+")
 
 
 advanced_parser = subparser.add_parser("adv", help="Advanced mathematical operations")
-advanced_parser.add_argument("operation", choices=["sin", "cos", "tan", "log", "exp", "nth", "pow"])
+advanced_parser.add_argument("operation", choices=["sin", "cos", "tan", "log", "exp", "nth", "pow", "log10"])
 advanced_parser.add_argument("numbers", type=float, nargs="+")
 
 arguments = parser.parse_args()
