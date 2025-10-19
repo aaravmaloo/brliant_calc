@@ -1,5 +1,5 @@
 import numpy as np
-
+import math
 
 
 def nth(*args):
@@ -24,3 +24,23 @@ def pow(*args):
     
     base, exponent = args
     return np.power(base, exponent)
+
+def log(*args):
+    if len(args) != 1:
+        return "the log function requires exactly one argument."
+    
+    value = args[0]
+    if value <= 0:
+        return "logarithm is undefined for non-positive values."
+    
+    return np.log(value)
+
+def log10(*args):
+    if len(args) != 1:
+        return "the log10 function requires exactly one argument."
+    
+    value = args[0]
+    if value <= 0:
+        return "logarithm is undefined for non-positive values."
+    
+    return np.log10(value)
