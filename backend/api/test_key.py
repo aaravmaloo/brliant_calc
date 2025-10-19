@@ -1,11 +1,12 @@
 import os
 import json
 
+# This is the handler Vercel expects for Python serverless functions
 def handler(request):
-    # Get your API key from environment variables
+    # Get your API key from Vercel environment variables
     API_KEY = os.getenv("API_KEY")
     
-    # Just return it in JSON (for testing only! remove before real use)
+    # Return it in JSON (for testing only — remove later for safety)
     return {
         "statusCode": 200,
         "body": json.dumps({
