@@ -12,15 +12,13 @@ basic_parser.add_argument("numbers", type=float, nargs="+")
 arguments = parser.parse_args()
 
 if arguments.command == "basic":
-    if arguments.operation == "add":
-        res = basic_ops.add(*arguments.numbers)
-        print(f"{res:g}")
-    if arguments.operation == "sub":
-        res = basic_ops.sub(*arguments.numbers)
-        print(f"{res:g}")
-    if arguments.operation == "mul":
-        res = basic_ops.mul(*arguments.numbers)
-        print(f"{res:g}")
-    if arguments.operation == "div":
-        res = basic_ops.div(*arguments.numbers)
-        print(f"{res:g}")
+    operation = arguments.operation
+    nums = arguments.numbers
+
+    func = getattr(basic_ops, operation)
+    result = func(*nums)
+
+    if isinstance(result, (int, float)):
+        print(f"{result:g}")  
+    else:
+        print(result)
