@@ -45,3 +45,13 @@ def log10(*args):
     
     return np.log10(value)
 
+def fact(*args):
+    if len(args) != 1:
+        return "the fact function requires exactly one argument."
+    
+    n = (int(args[0]))
+    
+    if not isinstance(n, int) or n < 0:
+        return "factorial is only defined for non-negative integers."
+    
+    return math.factorial(n)
