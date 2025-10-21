@@ -10,6 +10,9 @@ basic_parser.add_argument("operation", choices=["add", "sub", "div", "mul", "mod
 basic_parser.add_argument("numbers", type=float, nargs="+")
 
 
+currency_parser = subparser.add_parser("curr", help="Currency conversion operations")
+currency_parser.add_argument("update", choices=["upd"], help="Update currency exchange rates")
+
 advanced_parser = subparser.add_parser("adv", help="Advanced mathematical operations")
 advanced_parser.add_argument("operation", choices=["sin", "cos", "tan", "log", "exp", "nth", "pow", "log10", "fact", ])
 advanced_parser.add_argument("numbers", type=float, nargs="+")
@@ -41,3 +44,9 @@ elif arguments.command == "adv":
         print(result)
 
 
+elif arguments.command == "curr":
+    if arguments.update == "upd":
+        from currency_converter.app import get_curr_json
+        result = get_curr_json()
+        print("Exchange rates updated successfully.") 
+        
