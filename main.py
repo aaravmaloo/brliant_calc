@@ -13,6 +13,11 @@ basic_parser.add_argument("numbers", type=float, nargs="+")
 currency_parser = subparser.add_parser("curr", help="Currency conversion operations")
 currency_parser.add_argument("update", choices=["upd"], help="Update currency exchange rates")
 
+convert_parser = subparser.add_parser("convert", help="Convert currency")
+convert_parser.add_argument("from_currency", type=str, help="Source currency code (e.g., USD)")
+convert_parser.add_argument("to_currency", type=str, help="Target currency code (e.g., INR)")
+convert_parser.add_argument("amount", type=float, help="Amount to convert")
+
 advanced_parser = subparser.add_parser("adv", help="Advanced mathematical operations")
 advanced_parser.add_argument("operation", choices=["sin", "cos", "tan", "log", "exp", "nth", "pow", "log10", "fact", ])
 advanced_parser.add_argument("numbers", type=float, nargs="+")
@@ -49,4 +54,8 @@ elif arguments.command == "curr":
         from currency_converter.app import get_curr_json
         result = get_curr_json()
         print("Exchange rates updated successfully.") 
-        
+
+elif arguments.command == "convert":
+    from calculator.convert_currency import convert_currency
+    result = convert_currency(arguments.from_currency, arguments.to_currency, arguments.amount)
+    print(f"{arguments.amount} {arguments.from_currency} = {result:.2f} {arguments.to_currency}")

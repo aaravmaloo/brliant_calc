@@ -1,4 +1,5 @@
 from currency_converter import CurrencyConverter
 
-c = CurrencyConverter()
-print(f"Converted amount: {c.convert(100, 'USD', 'INR')}")
+def convert_currency(from_curr, to_curr, amount):
+    c = CurrencyConverter()
+    return c.convert(amount, from_curr, to_curr)
