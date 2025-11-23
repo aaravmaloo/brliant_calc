@@ -22,6 +22,20 @@ advanced_parser = subparser.add_parser("adv", help="Advanced mathematical operat
 advanced_parser.add_argument("operation", choices=["sin", "cos", "tan", "log", "exp", "nth", "pow", "log10", "fact", ])
 advanced_parser.add_argument("numbers", type=float, nargs="+")
 
+vector_parser = subparser.add_parser("vector", help="Vector operations")
+vector_parser.add_argument("operation", choices=["dot_product", "cross_product", "magnitude", "normalize", "angle_between"])
+vector_parser.add_argument("components", type=float, nargs="+", help="Vector components")
+
+physics_parser = subparser.add_parser("physics", help="Physics formulas")
+physics_parser.add_argument("operation", choices=["force", "kinetic_energy", "potential_energy", "ohms_law", "work", "speed", "acceleration"])
+physics_parser.add_argument("args", type=float, nargs="+", help="Arguments for the formula")
+
+units_parser = subparser.add_parser("units", help="Unit conversions")
+units_parser.add_argument("category", choices=["length", "mass", "temperature", "time", "speed"])
+units_parser.add_argument("value", type=float, help="Value to convert")
+units_parser.add_argument("from_unit", type=str, help="Source unit")
+units_parser.add_argument("to_unit", type=str, help="Target unit")
+
 arguments = parser.parse_args()
 
 if arguments.command == "basic":
@@ -59,3 +73,21 @@ elif arguments.command == "convert":
     from calculator.convert_currency import convert_currency
     result = convert_currency(arguments.from_currency, arguments.to_currency, arguments.amount)
     print(f"{arguments.amount} {arguments.from_currency} = {result:.2f} {arguments.to_currency}")
+
+elif arguments.command == "vector":
+    from calculator import vectors
+    func = getattr(vectors, arguments.operation)
+    result = func(*arguments.components)
+    print(result)
+
+elif arguments.command == "physics":
+    from calculator import physics_formulas
+    func = getattr(physics_formulas, arguments.operation)
+    result = func(*arguments.args)
+    print(result)
+
+elif arguments.command == "units":
+    from calculator import units
+    func = getattr(units, arguments.category)
+    result = func(arguments.value, arguments.from_unit, arguments.to_unit)
+    print(result)
