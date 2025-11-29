@@ -2,37 +2,28 @@ import math
 
 
 def add(*args):
-    total = 0
-    for i in args:
-        total += i
-    return total
+    return math.fsum(args)
 
 def sub(*args):
-    total = 0
-    for i in args:
-        total -= i
-    return total
+    if not args:
+        return 0
+    return args[0] - math.fsum(args[1:])
 
 def mul(*args):
-    total = 1
-    for i in args:
-        total *= i
-    return total
+    return math.prod(args)
 
 def div(*args):
+    if not args:
+        return "error: no arguments provided"
     if 0 in args[1:]:  
         return "cannot divide by zero."
-    total = args[0]  
-    for i in args[1:]: 
+    
+    total = args[0]
+    for i in args[1:]:
         total /= i
     return total
 
-def mod(*args):
-    if len(args) != 2:
-        return "the mod function requires exactly two arguments (dividend, divisor)."
-    
-    dividend, divisor = args
+def mod(dividend, divisor):
     if divisor == 0:
         return "cannot divide by zero."
-    
     return math.fmod(dividend, divisor)
