@@ -134,6 +134,17 @@ Convert 100 USD to INR:
 python main.py convert USD INR 100
 ```
 
+### 7. Select Function
+For ease of use, you can type bcalc sel category_of_command to enter a shell mode that accepts commands that the category offers.
+For example
+``` bash
+bcalc sel adv
+adv > sin 1.5708
+adv > cos 1.5708
+(the shell keeps accepting calculations)
+adv > exit (for exiting press q)
+```
+
 ## Help
 To see a full list of commands and options:
 ```bash
