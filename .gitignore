@@ -3,3 +3,4 @@ calculator/test.py
 build/
 *.exe
 dist/*.exe
+/__pycache__
