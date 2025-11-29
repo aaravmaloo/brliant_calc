@@ -1,59 +1,34 @@
 import numpy as np
 import math
+from functools import lru_cache
 
-
-def nth(*args):
-    if len(args) != 2:
-        return "the nth function requires exactly two arguments (number, n)."
-    
-    number, n = args
+def nth(number, n):
     if n == 0:
         return "n cannot be zero."
-
     return np.power(number, 1 / n)
 
-def exp(*args):
-    if len(args) != 1:
-        return "the exp function requires exactly one argument."
-    
-    return np.exp(args[0])
+def exp(x):
+    return np.exp(x)
 
-def pow(*args):
-    if len(args) != 2:
-        return "the pow function requires exactly two arguments (base, exponent)."
-    
-    base, exponent = args
+def pow(base, exponent):
     return np.power(base, exponent)
 
-def log(*args):
-    if len(args) != 1:
-        return "the log function requires exactly one argument."
-    
-    value = args[0]
+def log(value):
     if value <= 0:
         return "logarithm is undefined for non-positive values."
-    
     return np.log(value)
 
-def log10(*args):
-    if len(args) != 1:
-        return "the log10 function requires exactly one argument."
-    
-    value = args[0]
+def log10(value):
     if value <= 0:
         return "logarithm is undefined for non-positive values."
-    
     return np.log10(value)
 
-def fact(*args):
-    if len(args) != 1:
-        return "the fact function requires exactly one argument."
-    
-    n = (int(args[0]))
-    
+@lru_cache(maxsize=128)
+def fact(n):
+    if isinstance(n, float) and n.is_integer():
+        n = int(n)
     if not isinstance(n, int) or n < 0:
         return "factorial is only defined for non-negative integers."
-    
     return math.factorial(n)
 
 
