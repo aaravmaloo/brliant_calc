@@ -13,10 +13,11 @@ Unlike traditional GUI calculators that require slow point-and-click interaction
 
 ## Installation
 
-Ensure you have Python installed. You will also need `numpy` for vector and advanced math operations.
+Ensure you have Python installed. You will need `numpy` for vector and advanced math operations; Install CurrencyConverter for currency conversion.
 
 ```bash
 pip install numpy
+pip install CurrencyConverter
 ```
 
 ## Usage Guide
