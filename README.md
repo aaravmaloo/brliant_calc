@@ -20,12 +20,26 @@ A powerful, advanced command-line scientific calculator for engineers, scientist
 
 ## Installation
 
-1. Clone the repository.
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-   *Note: Requires `numpy`, `sympy`, `matplotlib`, `pint`.*
+```bash
+pip install brliant_calc
+```
+
+## Custom Command Aliases
+
+Create custom shortcuts for the calculator command (permanently installed, no PATH modification needed):
+
+```bash
+
+brliant_calc -changeCall bcalc
+
+
+brliant_calc -listAliases
+
+
+brliant_calc -removeAlias bcalc
+```
+
+**Note**: On Windows 11, if you don't have `sudo` installed, you can enable it in Settings → System → For developers → Enable sudo.
 
 ## Usage
 
