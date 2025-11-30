@@ -12,7 +12,7 @@ A comprehensive calculator for engineers, scientists, and developers with suppor
 - Arbitrary precision arithmetic
 """
 
-__version__ = "2.1.0"
+__version__ = "2.1.2"
 __author__ = "Aarav Maloo"
 __email__ = "aaravmaloo06@email.com"
 __description__ = "A advanced calculator for complicated mathematics."
