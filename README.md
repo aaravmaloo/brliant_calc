@@ -145,6 +145,10 @@ adv > cos 1.5708
 adv > exit (for exiting press q)
 ```
 
+## Contributing
+To contribute to this project, please fork this repo and create a pull request. If you want to be added as a contributor, please open an issue or contact me at [aaravmaloo06@gmail.com](mailto:aaravmaloo06@gmail.com).
+
+
 ## Help
 To see a full list of commands and options:
 ```bash
