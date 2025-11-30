@@ -1,11 +1,10 @@
 import argparse
 import sys
 import shlex
-from calculator import basic_ops, advanced_ops, vectors, physics_formulas, units
+from calculator import basic_ops, advanced_ops, vectors, physics_formulas, units, matrix_ops, complex_ops, symbolic_ops, plotting, dimensional_analysis, precision_ops
 
 class safeargparser(argparse.ArgumentParser):
     def error(self, message):
-        
         raise ValueError(message)
 
 def execute_command(arguments):
@@ -85,9 +84,56 @@ def execute_command(arguments):
             func = getattr(units, arguments.category)
             result = func(arguments.value, arguments.from_unit, arguments.to_unit)
             print(result)
+
+        elif arguments.command == "matrix":
+            func = getattr(matrix_ops, arguments.operation)
+            if arguments.operation in ["mul"]:
+                result = func(arguments.m1, arguments.m2)
+            else:
+                result = func(arguments.m1)
+            print(result)
+
+        elif arguments.command == "complex":
+            func = getattr(complex_ops, arguments.operation)
+            if arguments.operation in ["add", "sub", "mul", "div"]:
+                result = func(arguments.c1, arguments.c2)
+            elif arguments.operation == "rect":
+                result = func(arguments.c1, arguments.c2) # c1=r, c2=phi
+            else:
+                result = func(arguments.c1)
+            print(result)
+
+        elif arguments.command == "symbolic":
+            func = getattr(symbolic_ops, arguments.operation)
+            if arguments.operation in ["diff", "integrate", "solve"]:
+                result = func(arguments.expression, arguments.variable)
+            else:
+                result = func(arguments.expression)
+            print(result)
+
+        elif arguments.command == "plot":
+            func = getattr(plotting, arguments.operation)
+            result = func(arguments.function, arguments.range)
+            print(result)
+
+        elif arguments.command == "dim":
+            func = getattr(dimensional_analysis, arguments.operation)
+            if arguments.operation == "evaluate_dim":
+                result = func(arguments.expression)
+            else:
+                result = func(arguments.value, arguments.from_unit, arguments.to_unit)
+            print(result)
+
+        elif arguments.command == "precise":
+            func = getattr(precision_ops, arguments.operation)
+            if "decimal" in arguments.operation:
+                result = func(arguments.n1, arguments.n2, arguments.precision)
+            else:
+                result = func(arguments.n1, arguments.n2)
+            print(result)
             
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"an error has occurred: {e}")
 
 def run_shell(category, parser):
     print(f"Entering {category} mode. Type 'exit' to quit.")
@@ -103,11 +149,11 @@ def run_shell(category, parser):
             execute_command(args)
             
         except ValueError as e:
-            print(f"Error: {e}")
+            print(f"error: {e}")
         except SystemExit:
             pass
         except Exception as e:
-            print(f"An error occurred: {e}")
+            print(f"an error has occurred: {e}")
 
 def main():
     parser = safeargparser(description="A command-line advanced scientific calculator")
@@ -120,6 +166,7 @@ def main():
     currency_parser = subparser.add_parser("curr", help="Currency conversion operations")
     currency_parser.add_argument("update", choices=["upd"], help="Update currency exchange rates")
 
+
     convert_parser = subparser.add_parser("convert", help="Convert currency")
     convert_parser.add_argument("from_currency", type=str, help="Source currency code (e.g., USD)")
     convert_parser.add_argument("to_currency", type=str, help="Target currency code (e.g., INR)")
@@ -128,6 +175,7 @@ def main():
     advanced_parser = subparser.add_parser("adv", help="Advanced mathematical operations")
     advanced_parser.add_argument("operation", choices=["sin", "cos", "tan", "log", "exp", "nth", "pow", "log10", "fact"])
     advanced_parser.add_argument("numbers", type=float, nargs="+")
+
 
     vector_parser = subparser.add_parser("vector", help="Vector operations")
     vector_parser.add_argument("operation", choices=["dot_product", "cross_product", "magnitude", "normalize", "angle_between"])
@@ -139,12 +187,58 @@ def main():
 
     units_parser = subparser.add_parser("units", help="Unit conversions")
     units_parser.add_argument("category", choices=["length", "mass", "temperature", "time", "speed"])
+
     units_parser.add_argument("value", type=float, help="Value to convert")
     units_parser.add_argument("from_unit", type=str, help="Source unit")
     units_parser.add_argument("to_unit", type=str, help="Target unit")
 
+    matrix_parser = subparser.add_parser("matrix", help="Matrix operations")
+    matrix_parser.add_argument("operation", choices=["mul", "det", "inv", "eig", "transpose", "rank"])
+    
+    matrix_parser.add_argument("m1", type=str, help="First matrix (e.g. '[[1,2],[3,4]]')")
+    matrix_parser.add_argument("--m2", type=str, help="Second matrix for binary operations", required=False)
+
+    complex_parser = subparser.add_parser("complex", help="Complex number operations")
+    complex_parser.add_argument("operation", choices=["add", "sub", "mul", "div", "mag", "phase", "polar", "rect"])
+    complex_parser.add_argument("c1", type=str, help="First complex number (e.g. '1+2j') or r for rect")
+    complex_parser.add_argument("--c2", type=str, help="Second complex number or phi for rect", required=False)
+
+    symbolic_parser = subparser.add_parser("symbolic", help="Symbolic math operations")
+    symbolic_parser.add_argument("operation", choices=["simplify", "diff", "integrate", "solve", "expand", "factor"])
+
+    symbolic_parser.add_argument("expression", type=str, help="Mathematical expression (e.g. 'x**2 + 2*x + 1')")
+    symbolic_parser.add_argument("--variable", type=str, help="Variable for calculus/solving (default: x)", default="x")
+
+
+
+    plot_parser = subparser.add_parser("plot", help="Graphing operations")
+    plot_parser.add_argument("operation", choices=["plot"])
+
+    plot_parser.add_argument("function", type=str, help="Function to plot (e.g. 'sin(x)')")
+    plot_parser.add_argument("--range", type=str, help="X range 'start,end' (default: 0,10)", default="0,10")
+
+    dim_parser = subparser.add_parser("dim", help="Dimensional analysis")
+    dim_parser.add_argument("operation", choices=["evaluate_dim", "convert_dim"])
+    dim_parser.add_argument("expression", type=str, help="Expression with units (e.g. '5 * meter + 30 * centimeter')", nargs="?")
+
+
+    dim_parser.add_argument("--value", type=float, help="Value for conversion")
+    dim_parser.add_argument("--from_unit", type=str, help="Source unit")
+    dim_parser.add_argument("--to_unit", type=str, help="Target unit")
+
+
+    precise_parser = subparser.add_parser("precise", help="Arbitrary precision arithmetic")
+    precise_parser.add_argument("operation", choices=["add_fraction", "sub_fraction", "mul_fraction", "div_fraction", "add_decimal", "sub_decimal", "mul_decimal", "div_decimal"])
+
+
+    precise_parser.add_argument("n1", type=str, help="First number")
+    precise_parser.add_argument("n2", type=str, help="Second number")
+    precise_parser.add_argument("--precision", type=int, help="Precision for decimal operations (default: 28)", default=28)
+
     sel_parser = subparser.add_parser("sel", help="Interactive shell")
     sel_parser.add_argument("category", choices=["basic", "adv", "curr", "convert", "vector", "physics", "units"])
+
+
 
     try:
         if len(sys.argv) == 1:
@@ -153,14 +247,20 @@ def main():
 
         arguments = parser.parse_args()
 
+
+
         if arguments.command == "sel":
             run_shell(arguments.category, parser)
         else:
             execute_command(arguments)
 
+
+
     except ValueError as e:
         print(f"Error: {e}")
         sys.exit(1)
+
+
 
 if __name__ == "__main__":
     main()
