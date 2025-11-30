@@ -3,3 +3,4 @@ build/
 *.exe
 dist/*.exe
 /__pycache__
+/brliant_calc/__pycache__
