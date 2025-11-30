@@ -86,6 +86,49 @@ Enter the interactive mode to run multiple commands without restarting:
 python main.py sel basic
 ```
 
+## Shortcuts
+You can use the following short aliases for commands:
+- `basic` -> `b`
+- `adv` -> `a`
+- `curr` -> `cr`
+- `convert` -> `cv`
+- `vector` -> `v`
+- `physics` -> `p`
+- `units` -> `u`
+- `matrix` -> `m`
+- `complex` -> `cx`
+- `symbolic` -> `s`
+- `plot` -> `pl`
+- `dim` -> `d`
+- `precise` -> `pr`
+- `sel` -> `sh`
+
+Example: `python main.py b add 1 2` is the same as `python main.py basic add 1 2`.
+
+## Tab Completion
+This tool supports tab completion for commands and arguments using `argcomplete`.
+
+1. Install `argcomplete`:
+   ```bash
+   pip install argcomplete
+   ```
+
+2. Activate completion (depends on your shell):
+
+   **Bash:**
+   ```bash
+   eval "$(register-python-argcomplete main.py)"
+   ```
+
+   **PowerShell:**
+   ```powershell
+   Import-Module argcomplete
+   ```
+   (See [argcomplete documentation](https://github.com/kislyuk/argcomplete) for permanent configuration).
+
+3. Usage:
+   Type `python main.py <TAB>` to see available commands.
+
 ## Contributing
 Contributions are welcome! Please submit a pull request or open an issue.
 
