@@ -211,6 +211,34 @@ def main():
     sel = sub.add_parser("sel", aliases=["sh"])
     sel.add_argument("category", choices=["basic", "adv", "curr", "convert", "vector", "physics", "units"])
 
+    # Handle alias management before normal argument parsing
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "-changeCall" or sys.argv[1] == "--changeCall":
+            if len(sys.argv) < 3:
+                print("Usage: brliant_calc -changeCall <alias_name>")
+                print("Example: brliant_calc -changeCall bcalc")
+                sys.exit(1)
+            
+            from brliant_calc.alias_manager import create_alias
+            alias_name = sys.argv[2]
+            create_alias(alias_name)
+            sys.exit(0)
+        
+        elif sys.argv[1] == "-removeAlias" or sys.argv[1] == "--removeAlias":
+            if len(sys.argv) < 3:
+                print("Usage: brliant_calc -removeAlias <alias_name>")
+                sys.exit(1)
+            
+            from brliant_calc.alias_manager import remove_alias
+            alias_name = sys.argv[2]
+            remove_alias(alias_name)
+            sys.exit(0)
+        
+        elif sys.argv[1] == "-listAliases" or sys.argv[1] == "--listAliases":
+            from brliant_calc.alias_manager import list_aliases
+            list_aliases()
+            sys.exit(0)
+    
     try:
         if len(sys.argv) == 1:
             parser.print_help()
