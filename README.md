@@ -1,160 +1,93 @@
 # Brliant Calculator
 
-**Brliant Calculator** is a powerful, high-performance command-line interface (CLI) scientific calculator designed for developers, engineers, and power users who demand speed and efficiency.
+A powerful, advanced command-line scientific calculator for engineers, scientists, and developers.
 
-Unlike traditional GUI calculators that require slow point-and-click interactions, Brliant Calculator allows you to perform complex calculations, vector math, physics simulations, and unit conversions instantly using simple keyboard commands. Once you master the syntax, it becomes significantly faster than any standard calculator app.
+## Features
 
-## Why Brliant Calculator?
-
-*   **Speed**: Keep your hands on the keyboard. No mouse required.
-*   **Efficiency**: Chain commands and process arguments faster than you can type them into a GUI.
-*   **Power**: Built-in support for advanced mathematics, linear algebra (vectors), physics formulas, and real-time currency conversion.
-*   **Scriptable**: easy to integrate into shell scripts or batch processes.
+- **Basic Arithmetic**: Addition, subtraction, multiplication, division, modulo.
+- **Advanced Math**: Trigonometry, logarithms, exponentials, factorials, powers.
+- **Vector Operations**: Dot product, cross product, magnitude, normalization, angle between vectors.
+- **Physics Formulas**: Force, kinetic energy, potential energy, Ohm's law, work, speed, acceleration.
+- **Unit Conversions**: Length, mass, temperature, time, speed.
+- **Currency Conversion**: Real-time currency exchange rates.
+- **Matrix Operations**: Multiplication, determinant, inverse, eigenvalues/eigenvectors, transpose, rank.
+- **Complex Numbers**: Arithmetic, polar/rectangular conversion, magnitude, phase.
+- **Symbolic Math**: Algebraic simplification, differentiation, integration, equation solving.
+- **Graphing**: 2D function plotting using Matplotlib.
+- **Dimensional Analysis**: Unit-aware calculations and conversions.
+- **Arbitrary Precision**: Exact rational arithmetic and high-precision decimal calculations.
+- **Interactive Shell**: A dedicated shell mode for continuous calculations.
 
 ## Installation
 
-Ensure you have Python installed. You will need `numpy` for vector and advanced math operations; Install CurrencyConverter for currency conversion.
+1. Clone the repository.
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   *Note: Requires `numpy`, `sympy`, `matplotlib`, `pint`.*
 
+## Usage
+
+Run the calculator using `python main.py [command] [arguments]`.
+
+### Basic Operations
 ```bash
-pip install numpy
-pip install CurrencyConverter
+python main.py basic add 10 5
+python main.py basic mul 2 3 4
 ```
 
-## Usage Guide
-
-The general syntax is:
+### Advanced Math
 ```bash
-python main.py <category> <operation> [arguments...]
+python main.py adv sin 1.57
+python main.py adv log10 100
 ```
 
-You can always append `--help` to any command to see available options.
-
-### 1. Basic Arithmetic
-Perform standard arithmetic operations with multiple numbers.
-
-**Command:** `basic`
-**Operations:** `add`, `sub`, `div`, `mul`, `mod`
-
-Add numbers:
+### Matrix Operations
 ```bash
-python main.py basic add 10 5 2
+python main.py matrix mul "[[1,2],[3,4]]" --m2 "[[5,6],[7,8]]"
+python main.py matrix det "[[1,2],[3,4]]"
+python main.py matrix inv "[[1,2],[3,4]]"
 ```
 
-Multiply numbers:
+### Complex Numbers
 ```bash
-python main.py basic mul 4 5 2
+python main.py complex add "1+2j" --c2 "3+4j"
+python main.py complex polar "1+1j"
 ```
 
-### 2. Advanced Mathematics
-Access scientific functions including trigonometry, logarithms, and exponentials.
-
-**Command:** `adv`
-**Operations:** `sin`, `cos`, `tan`, `log` (ln), `log10`, `exp`, `pow`, `nth` (nth root), `fact` (factorial)
-
-Calculate sine of 90 degrees (input in radians):
+### Symbolic Math
 ```bash
-python main.py adv sin 1.5708
+python main.py symbolic diff "x**2 + 2*x + 1" --variable "x"
+python main.py symbolic integrate "sin(x)"
+python main.py symbolic solve "x**2 - 4"
 ```
 
-Calculate 2 to the power of 3:
+### Graphing
 ```bash
-python main.py adv pow 2 3
+python main.py plot plot "sin(x)" --range "0,6.28"
 ```
 
-Calculate factorial of 5:
+### Dimensional Analysis
 ```bash
-python main.py adv fact 5
+python main.py dim evaluate_dim "5 * meter + 30 * centimeter"
+python main.py dim convert_dim --value 100 --from_unit "km/h" --to_unit "m/s"
 ```
 
-### 3. Vector Operations
-Perform linear algebra operations on vectors of any dimension (using `numpy`).
-
-**Command:** `vector`
-**Operations:** `dot_product`, `cross_product`, `magnitude`, `normalize`, `angle_between`
-
-Calculate dot product of vectors [1, 2] and [3, 4]:
+### Arbitrary Precision
 ```bash
-python main.py vector dot_product 1 2 3 4
+python main.py precise add_fraction "1/3" "1/6"
+python main.py precise div_decimal "1" "3" --precision 50
 ```
 
-Calculate magnitude of vector [3, 4]:
+### Interactive Shell
+Enter the interactive mode to run multiple commands without restarting:
 ```bash
-python main.py vector magnitude 3 4
-```
-
-Calculate angle between two vectors:
-```bash
-python main.py vector angle_between 1 0 0 1
-```
-
-### 4. Physics Formulas
-Quickly solve common physics problems.
-
-**Command:** `physics`
-**Operations:** `force`, `kinetic_energy`, `potential_energy`, `ohms_law`, `work`, `speed`, `acceleration`
-
-Calculate Force (F = ma):
-```bash
-python main.py physics force 10 5
-```
-
-Calculate Kinetic Energy:
-```bash
-python main.py physics kinetic_energy 50 10
-```
-
-### 5. Unit Conversions
-Convert between metric and imperial units instantly.
-
-**Command:** `units`
-**Categories:** `length`, `mass`, `temperature`, `time`, `speed`
-
-**Syntax:** `python main.py units <category> <value> <from_unit> <to_unit>`
-
-Convert 5 kilometers to miles:
-```bash
-python main.py units length 5 km miles
-```
-
-Convert 100 Celsius to Fahrenheit:
-```bash
-python main.py units temperature 100 C F
-```
-
-### 6. Currency Conversion
-Convert currencies using real-time exchange rates.
-
-Update Rates:
-```bash
-python main.py curr upd
-```
-
-Convert 100 USD to INR:
-```bash
-python main.py convert USD INR 100
-```
-
-### 7. Select Function
-For ease of use, you can type bcalc sel category_of_command to enter a shell mode that accepts commands that the category offers.
-For example
-``` bash
-bcalc sel adv
-adv > sin 1.5708
-adv > cos 1.5708
-(the shell keeps accepting calculations)
-adv > exit (for exiting press q)
+python main.py sel basic
 ```
 
 ## Contributing
-To contribute to this project, please fork this repo and create a pull request. If you want to be added as a contributor, please open an issue or contact me at [aaravmaloo06@gmail.com](mailto:aaravmaloo06@gmail.com).
+Contributions are welcome! Please submit a pull request or open an issue.
 
-
-## Help
-To see a full list of commands and options:
-```bash
-python main.py --help
-```
-For specific module help:
-```bash
-python main.py vector --help
-```
+## License
+MIT License
