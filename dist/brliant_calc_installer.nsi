@@ -1,5 +1,5 @@
 ; -------------------------------
-; Brliant Calculator v2.1.0 Installer
+; Brliant Calculator v2.1.2 Installer
 ; -------------------------------
 
 !include "MUI2.nsh"
@@ -14,7 +14,7 @@ ${StrStr}
 ${StrRep}
 ${UnStrRep}
 
-Name "Brliant Calculator v2.1.0"
+Name "Brliant Calculator v2.1.2"
 OutFile "Brliant_Calc_Installer.exe"
 InstallDir "$PROGRAMFILES\Brliant Calculator"
 RequestExecutionLevel admin
@@ -22,7 +22,7 @@ ShowInstDetails show
 ShowUninstDetails show
 
 !define DEFAULT_CMDNAME "brliant_calc"
-!define VERSION "2.1.0"
+!define VERSION "2.1.2"
 
 Var CMDNAME
 Var CMDLABEL
