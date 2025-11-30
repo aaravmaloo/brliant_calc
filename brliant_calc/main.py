@@ -2,7 +2,7 @@ import argparse
 import sys
 import shlex
 
-from calculator import basic_ops, advanced_ops, vectors, physics_formulas, units, matrix_ops, complex_ops, symbolic_ops, plotting, dimensional_analysis, precision_ops
+import basic_ops, advanced_ops, vectors, physics_formulas, units, matrix_ops, complex_ops, symbolic_ops, plotting, dimensional_analysis, precision_ops
 
 class safeargparser(argparse.ArgumentParser):
     def error(self, message):
