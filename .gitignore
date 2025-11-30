@@ -4,3 +4,4 @@ build/
 dist/*.exe
 /__pycache__
 /brliant_calc/__pycache__
+/brliant_calc.egg-info
