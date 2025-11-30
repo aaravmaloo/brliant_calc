@@ -84,8 +84,6 @@ Function SelectNameLeave
     StrCpy $CMDNAME "${DEFAULT_CMDNAME}"
 FunctionEnd
 
-
-
 ; =========================
 ; INSTALL
 ; =========================
@@ -94,13 +92,13 @@ Section "Install"
   SetOutPath "$INSTDIR"
   CreateDirectory "$INSTDIR"
 
-  ; Copy program
-  ; IMPORTANT: Build the exe first using PyInstaller:
-  ;   pyinstaller --onefile brliant_calc\__main__.py -n brliant_calc
-  ; The exe will be in dist\brliant_calc.exe
-  File /oname=brliant_calc.exe "brliant_calc.exe"
+  ; Copy program directory
+  ; IMPORTANT: Build the dir first using PyInstaller:
+  ;   pyinstaller brliant_calc.spec
+  ; The dir will be in dist\brliant_calc
+  File /r "brliant_calc\*.*"
 
-  ; Rename to chosen command name
+  ; Rename executable to chosen command name
   StrCpy $R0 "$INSTDIR\$CMDNAME.exe"
   Rename "$INSTDIR\brliant_calc.exe" "$R0"
 
