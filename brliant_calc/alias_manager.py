@@ -28,24 +28,84 @@ def get_config_file():
 
 def get_scripts_dir():
     """Get the directory where Python scripts are installed."""
+    import site
+    
     if platform.system() == "Windows":
-        # Get the Scripts directory in user site-packages
-        user_base = Path(sys.prefix)
-        scripts_dir = user_base / "Scripts"
-        if not scripts_dir.exists():
-            # Try user scripts directory
-            import site
-            user_scripts = Path(site.USER_BASE) / "Scripts"
-            if user_scripts.exists():
-                scripts_dir = user_scripts
+        scripts_dir = None
+        
+        # Try sys.prefix first (works in normal Python)
+        if sys.prefix and sys.prefix != 'None':
+            try:
+                scripts_dir = Path(sys.prefix) / "Scripts"
+                if scripts_dir.exists():
+                    return scripts_dir
+            except:
+                pass
+        
+        # Try user site-packages
+        try:
+            if hasattr(site, 'USER_BASE') and site.USER_BASE:
+                user_scripts = Path(site.USER_BASE) / "Scripts"
+                if user_scripts.exists():
+                    return user_scripts
+                # Create if doesn't exist
+                user_scripts.mkdir(parents=True, exist_ok=True)
+                return user_scripts
+        except:
+            pass
+        
+        # Try to find from executable location
+        try:
+            if sys.executable:
+                python_dir = Path(sys.executable).parent
+                scripts_dir = python_dir / "Scripts"
+                if scripts_dir.exists():
+                    return scripts_dir
+        except:
+            pass
+        
+        # Fallback to AppData
+        try:
+            appdata = os.environ.get('APPDATA')
+            if appdata:
+                python_version = f"Python{sys.version_info.major}{sys.version_info.minor}"
+                fallback_scripts = Path(appdata) / "Python" / python_version / "Scripts"
+                fallback_scripts.mkdir(parents=True, exist_ok=True)
+                return fallback_scripts
+        except:
+            pass
+        
+        # Last resort
+        fallback = Path.home() / ".brliant_calc" / "Scripts"
+        fallback.mkdir(parents=True, exist_ok=True)
+        return fallback
+        
     else:
         # Unix-like systems
-        scripts_dir = Path(sys.prefix) / "bin"
-        if not scripts_dir.exists():
-            import site
-            scripts_dir = Path(site.USER_BASE) / "bin"
-    
-    return scripts_dir
+        if sys.prefix and sys.prefix != 'None':
+            try:
+                scripts_dir = Path(sys.prefix) / "bin"
+                if scripts_dir.exists():
+                    return scripts_dir
+            except:
+                pass
+        
+        # Try user site-packages
+        try:
+            if hasattr(site, 'USER_BASE') and site.USER_BASE:
+                user_bin = Path(site.USER_BASE) / "bin"
+                if user_bin.exists():
+                    return user_bin
+                user_bin.mkdir(parents=True, exist_ok=True)
+                return user_bin
+        except:
+            pass
+        
+        # Fallback
+        fallback = Path.home() / ".local" / "bin"
+        fallback.mkdir(parents=True, exist_ok=True)
+        return fallback
+
 
 
 def create_alias(alias_name):
