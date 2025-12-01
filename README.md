@@ -30,74 +30,76 @@ Create custom shortcuts for the calculator command (permanently installed, no PA
 
 ```bash
 
-brliant_calc -changeCall bcalc
+brliant_calc -changeCall bcalc 
 
 
 brliant_calc -listAliases
 
 
-brliant_calc -removeAlias bcalc
+brliant_calc -removeAlias bcalc 
 ```
 
 **Note**: On Windows 11, if you don't have `sudo` installed, you can enable it in Settings → System → For developers → Enable sudo.
 
 ## Usage
 
-Run the calculator using `python main.py [command] [arguments]`.
+Run the calculator using (assuming the registered alias is brliant_calc (default)) `brliant_calc <category> <operation> <numbers_sep_by_space>`
+
+In these examples, I will be using the alias bcalc 
 
 ### Basic Operations
 ```bash
-python main.py basic add 10 5
-python main.py basic mul 2 3 4
+bcalc basic add 10 5
+bcalc basic mul 2 3 4
 ```
 
 ### Advanced Math
 ```bash
-python main.py adv sin 1.57
-python main.py adv log10 100
+bcalc adv sin 1.57
+bcalc adv log10 100
 ```
 
 ### Matrix Operations
 ```bash
-python main.py matrix mul "[[1,2],[3,4]]" --m2 "[[5,6],[7,8]]"
-python main.py matrix det "[[1,2],[3,4]]"
-python main.py matrix inv "[[1,2],[3,4]]"
+bcalc matrix mul "[[1,2],[3,4]]" --m2 "[[5,6],[7,8]]"
+bcalc matrix det "[[1,2],[3,4]]"
+bcalc matrix inv "[[1,2],[3,4]]"
 ```
 
 ### Complex Numbers
 ```bash
-python main.py complex add "1+2j" --c2 "3+4j"
-python main.py complex polar "1+1j"
+bcalc complex add "1+2j" --c2 "3+4j"
+bcalc complex polar "1+1j"
 ```
 
 ### Symbolic Math
 ```bash
-python main.py symbolic diff "x**2 + 2*x + 1" --variable "x"
-python main.py symbolic integrate "sin(x)"
-python main.py symbolic solve "x**2 - 4"
+bcalc symbolic diff "x**2 + 2*x + 1" --variable "x"
+bcalc symbolic integrate "sin(x)"
+bcalc symbolic solve "x**2 - 4"
 ```
 
 ### Graphing
 ```bash
-python main.py plot plot "sin(x)" --range "0,6.28"
+bcalc plot plot "sin(x)" --range "0,6.28"
 ```
 
 ### Dimensional Analysis
 ```bash
-python main.py dim evaluate_dim "5 * meter + 30 * centimeter"
-python main.py dim convert_dim --value 100 --from_unit "km/h" --to_unit "m/s"
+bcalc dim evaluate_dim "5 * meter + 30 * centimeter"
+bcalc dim convert_dim --value 100 --from_unit "km/h" --to_unit "m/s"
 ```
 
 ### Arbitrary Precision
 ```bash
-python main.py precise add_fraction "1/3" "1/6"
-python main.py precise div_decimal "1" "3" --precision 50
+bcalc precise add_fraction "1/3" "1/6"
+bcalc precise div_decimal "1" "3" --precision 50
 ```
 
 ### Interactive Shell
 Enter the interactive mode to run multiple commands without restarting:
 ```bash
-python main.py sel basic
+bcalc sel basic
 ```
 
 ## Shortcuts
@@ -117,31 +119,8 @@ You can use the following short aliases for commands:
 - `precise` -> `pr`
 - `sel` -> `sh`
 
-Example: `python main.py b add 1 2` is the same as `python main.py basic add 1 2`.
+Example: `bcalc b add 1 2` is the same as `bcalc basic add 1 2`.
 
-## Tab Completion
-This tool supports tab completion for commands and arguments using `argcomplete`.
-
-1. Install `argcomplete`:
-   ```bash
-   pip install argcomplete
-   ```
-
-2. Activate completion (depends on your shell):
-
-   **Bash:**
-   ```bash
-   eval "$(register-python-argcomplete main.py)"
-   ```
-
-   **PowerShell:**
-   ```powershell
-   Import-Module argcomplete
-   ```
-   (See [argcomplete documentation](https://github.com/kislyuk/argcomplete) for permanent configuration).
-
-3. Usage:
-   Type `python main.py <TAB>` to see available commands.
 
 ## Contributing
 Contributions are welcome! Please submit a pull request or open an issue.
