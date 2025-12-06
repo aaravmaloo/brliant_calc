@@ -80,9 +80,39 @@ bcalc symbolic solve "x**2 - 4"
 ```
 
 ### Graphing
+
+The plotting module uses a **secure AST parser** (no `eval()`) that supports nested expressions, mathematical functions, and constants.
+
+**Basic Plot:**
 ```bash
-bcalc plot plot "sin(x)" --range "0,6.28"
+bcalc plot "sin(x)" --range "0,6.28"
 ```
+
+**Nested Expressions:**
+```bash
+bcalc plot "sin(x**2 + pi)" --range "0,10"
+bcalc plot "exp(-x) * cos(2*pi*x)" --range "0,5"
+bcalc plot "log(x**2 + 1)" --range "0,10"
+```
+
+**Supported Functions:**
+- Trigonometric: `sin`, `cos`, `tan`, `arcsin`, `arccos`, `arctan`
+- Hyperbolic: `sinh`, `cosh`, `tanh`
+- Exponential/Log: `exp`, `log`, `log10`, `sqrt`
+- Other: `abs`
+
+**Constants:**
+- `pi` (3.14159...)
+- `e` (2.71828...)
+
+**Variable:**
+- `x` (plotting variable)
+
+**Interactive Mode:**
+```bash
+bcalc sel plot
+plot > plot sin(x) --range 0,6.28
+
 
 ### Dimensional Analysis
 ```bash
@@ -102,9 +132,35 @@ bcalc convolve 1 2 3 -k 0.5 0.5
 ```
 
 ### Interactive Shell
-Enter the interactive mode to run multiple commands without restarting. The shell now features **smart autocomplete** and **syntax highlighting**.
+
+Enter interactive mode for a modern shell experience with **smart autocomplete**, **syntax highlighting**, and **inline suggestions**.
+
+**Features:**
+- **Context-Aware Suggestions**: Only shows commands valid for the current mode
+- **Inline Ghost Text**: See complete usage examples as you type
+- **Smart Argument Completion**: Suggests flags and structures (e.g., `[[` for matrices, `--range` for plots)
+- **Right Arrow to Accept**: Press → to accept suggestions
+
+**Example:**
 ```bash
-bcalc sel basic
+bcalc sel matrix
+matrix > mul 
+```
+When you type `mul ` and wait, you'll see a ghost text suggestion: `[[1,2],[3,4]] --m2 [[5,6],[7,8]]`
+
+**Available Modes:**
+```bash
+bcalc sel basic      # Basic arithmetic
+bcalc sel adv        # Advanced math (sin, cos, log, etc.)
+bcalc sel matrix     # Matrix operations
+bcalc sel complex    # Complex numbers
+bcalc sel symbolic   # Symbolic math
+bcalc sel plot       # Function plotting
+bcalc sel vector     # Vector operations
+bcalc sel physics    # Physics calculations
+bcalc sel units      # Unit conversions
+bcalc sel dim        # Dimensional analysis
+bcalc sel precise    # Arbitrary precision
 ```
 
 ## Shortcuts
