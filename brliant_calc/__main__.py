@@ -149,7 +149,7 @@ class CommandAutoSuggest(AutoSuggest):
     def get_suggestion(self, buffer, document):
         text = document.text_before_cursor
         
-        # Scenario 1: Typing a command (no space yet)
+       
         if ' ' not in text:
             val = text.strip()
             if not val:
@@ -159,7 +159,7 @@ class CommandAutoSuggest(AutoSuggest):
                     return Suggestion(cmd[len(val):])
             return None
             
-        # Scenario 2: Command typed
+        
         parts = text.split()
         if not parts:
             return None
@@ -168,14 +168,13 @@ class CommandAutoSuggest(AutoSuggest):
         if cmd not in self.commands:
             return None
             
-        # If user just typed the command and a space, show the full example
+        
         if len(parts) == 1 and text.endswith(' '):
             example = self.example_map.get(cmd)
             if example:
                 return Suggestion(example)
         
-        # Scenario 3: typing arguments / flags
-        # existing logic for flags
+        
         suggestions = self.arg_map.get(cmd, [])
         is_new_arg = text.endswith(' ')
         current_typing = "" if is_new_arg else parts[-1]
@@ -191,9 +190,9 @@ class CommandAutoSuggest(AutoSuggest):
         return None
 
 def run_shell(category, parser):
-    # console.print(f"[bold cyan]Entering {category} mode. Type 'exit' to quit.[/bold cyan]") -> Moved to end
+  
 
-    # Handle aliases by mapping them to the canonical name
+    
     category_map = {
         'b': 'basic', 'a': 'adv', 'cr': 'curr', 'cv': 'convert', 'v': 'vector', 
         'p': 'physics', 'u': 'units', 'm': 'matrix', 'cx': 'complex', 
@@ -232,7 +231,7 @@ def run_shell(category, parser):
         'cnv': ['--kernel'],
     }
     
-    # Define arguments/suggestions mapping by category to prevent collisions
+   
     CATEGORY_ARG_SUGGESTIONS = {
         'matrix': {
             'mul': ['"[["', '--m2'], 
@@ -265,7 +264,7 @@ def run_shell(category, parser):
              'diff': ['--variable'],
              'integrate': ['--variable'],
         },
-        # Basic and others might not have specific flags, but we define them to be safe
+        
         'basic': {},
         'adv': {},
         'vector': {},
@@ -275,9 +274,7 @@ def run_shell(category, parser):
     }
     
     arg_suggestions = CATEGORY_ARG_SUGGESTIONS.get(canonical_category, {})
-    
-    # Examples for full command suggestions (ghost text), organized by category to prevent collisions
-    # and ensure full coverage.
+ 
     CATEGORY_EXAMPLES = {
         'basic': {
             'add': '10 5', 'sub': '10 5', 'mul': '2 3 4', 'div': '10 2', 'mod': '10 3'
@@ -291,13 +288,13 @@ def run_shell(category, parser):
             'magnitude': '3 4', 'normalize': '3 4', 'angle_between': '1 0 0 1'
         },
         'physics': {
-            'force': '10 9.8', # m a
-            'kinetic_energy': '10 5', # m v
-            'potential_energy': '10 5', # m h
-            'ohms_law': '2 10', # I R
-            'work': '10 5', # F d
-            'speed': '100 9.8', # d t
-            'acceleration': '10 2 0' # v t v0
+            'force': '10 9.8', 
+            'kinetic_energy': '10 5', 
+            'potential_energy': '10 5', 
+            'ohms_law': '2 10', 
+            'work': '10 5', 
+            'speed': '100 9.8',
+            'acceleration': '10 2 0' 
         },
         'units': {
             'length': '100 meter kilometer', 'mass': '1000 gram kilogram', 
@@ -336,29 +333,22 @@ def run_shell(category, parser):
             'upd': ''
         },
         'convert': {
-             # convert mode uses args directly usually? No, it has generic args in main parser?
-             # cv.add_argument("from_currency")... 
-             # execute_command logic: mod.convert_currency(from, to, amount)
-             # But run_shell: full = [category] + args. 
-             # If category is 'convert', args should be 'USD INR 100'.
-             # In shell mode, we probably don't have a subcommand for convert?
-             # Completer dict says: 'convert': None.
-             # So user types arguments. Autosuggest won't help much here unless we hijack.
+        
         }, 
         'convolve': {
-             # Similar to convert, arguments directly.
+             
         }
     }
     
     
     command_examples = CATEGORY_EXAMPLES.get(canonical_category, {})
     
-    # Get commands specific to the current category
+    
     valid_commands = full_completer_dict.get(category, [])
-    # Add exit/quit to all modes
+   
     valid_commands.extend(['exit', 'quit'])
     
-    # Create a simple nested dictionary for NestedCompleter to handle existing logic if needed
+    
     category_completer_dict = {cmd: None for cmd in valid_commands}
     
     completer = NestedCompleter.from_nested_dict(category_completer_dict)
