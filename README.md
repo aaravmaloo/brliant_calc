@@ -54,9 +54,63 @@ bcalc basic mul 2 3 4
 ```
 
 ### Advanced Math
+
+**Trigonometric Functions:**
 ```bash
 bcalc adv sin 1.57
+bcalc adv cos 0
+bcalc adv tan 0.785
+bcalc adv arcsin 0.5
+bcalc adv arccos 0.5
+bcalc adv arctan 1
+```
+
+**Hyperbolic Functions:**
+```bash
+bcalc adv sinh 1
+bcalc adv cosh 0
+bcalc adv tanh 0.5
+bcalc adv arcsinh 1
+bcalc adv arccosh 2
+bcalc adv arctanh 0.5
+```
+
+**Logarithms & Exponentials:**
+```bash
+bcalc adv log 100
 bcalc adv log10 100
+bcalc adv log2 8
+bcalc adv exp 1
+bcalc adv pow 2 3
+bcalc adv nth 8 3
+```
+
+**Rounding & Sign:**
+```bash
+bcalc adv sqrt 16
+bcalc adv abs -5
+bcalc adv floor 3.7
+bcalc adv ceil 3.2
+bcalc adv round 3.14159 2
+bcalc adv trunc 3.9
+bcalc adv sign -42
+```
+
+**Statistics:**
+```bash
+bcalc adv mean 1 2 3 4 5
+bcalc adv median 1 2 3 4 5
+bcalc adv std 1 2 3 4 5
+bcalc adv var 1 2 3
+bcalc adv min 5 2 8 1 9
+bcalc adv max 5 2 8 1 9
+bcalc adv sum 1 2 3 4 5
+bcalc adv prod 2 3 4
+```
+
+**Other:**
+```bash
+bcalc adv fact 5
 ```
 
 ### Matrix Operations
