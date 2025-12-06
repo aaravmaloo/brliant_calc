@@ -96,8 +96,13 @@ bcalc precise add_fraction "1/3" "1/6"
 bcalc precise div_decimal "1" "3" --precision 50
 ```
 
+### Convolutions
+```bash
+bcalc convolve 1 2 3 -k 0.5 0.5
+```
+
 ### Interactive Shell
-Enter the interactive mode to run multiple commands without restarting:
+Enter the interactive mode to run multiple commands without restarting. The shell now features **smart autocomplete** and **syntax highlighting**.
 ```bash
 bcalc sel basic
 ```
