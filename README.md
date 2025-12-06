@@ -165,13 +165,34 @@ bcalc convolve 1 2 3 -k 0.5 0.5
 
 ### Interactive Shell
 
-Enter interactive mode for a modern shell experience with **smart autocomplete**, **syntax highlighting**, and **inline suggestions**.
+Enter interactive mode for a modern shell experience with **smart autocomplete**, **syntax highlighting**, **inline suggestions**, and **variable storage**.
 
 **Features:**
 - **Context-Aware Suggestions**: Only shows commands valid for the current mode
 - **Inline Ghost Text**: See complete usage examples as you type
 - **Smart Argument Completion**: Suggests flags and structures (e.g., `[[` for matrices, `--range` for plots)
 - **Right Arrow to Accept**: Press → to accept suggestions
+- **Variable Storage**: Define variables that persist throughout your session
+
+**Variable Storage:**
+```bash
+bcalc sel plot
+plot > a = 2
+Variable 'a' set to 2.0
+plot > b = 3.14
+Variable 'b' set to 3.14
+plot > plot sin(a*x + b) --range 0,10
+Plot displayed.
+plot > vars
+Stored Variables:
+  a = 2.0
+  b = 3.14
+plot > exit
+```
+
+Variables are stored in memory until you exit the shell mode. You can use them in:
+- Plot expressions: `plot sin(a*x)`, `plot x**2 + a*x + b`
+- Any calculations within the session
 
 **Example:**
 ```bash
