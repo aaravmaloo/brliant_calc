@@ -83,6 +83,9 @@ bcalc symbolic solve "x**2 - 4"
 
 The plotting module uses a **secure AST parser** (no `eval()`) that supports nested expressions, mathematical functions, and constants.
 
+> **⚠️ Important for Windows/PowerShell Users:**  
+> Always wrap expressions in **double quotes** (`"`) to avoid shell parsing errors!
+
 **Basic Plot:**
 ```bash
 bcalc plot "sin(x)" --range "0,6.28"
@@ -90,9 +93,36 @@ bcalc plot "sin(x)" --range "0,6.28"
 
 **Nested Expressions:**
 ```bash
+
 bcalc plot "sin(x**2 + pi)" --range "0,10"
+
+
 bcalc plot "exp(-x) * cos(2*pi*x)" --range "0,5"
+
+
 bcalc plot "log(x**2 + 1)" --range "0,10"
+
+
+bcalc plot "sin(x) + cos(2*x)" --range "0,6.28"
+bcalc plot "x**3 - 2*x**2 + x" --range "-2,3"
+bcalc plot "sqrt(abs(x)) * sin(x)" --range "0,10"
+```
+
+**More Examples:**
+```bash
+
+bcalc plot "exp(-x/5)" --range "0,20"
+
+
+bcalc plot "exp(-x**2)" --range "-3,3"
+
+
+bcalc plot "sinh(x)" --range "-2,2"
+bcalc plot "tanh(x)" --range "-5,5"
+
+
+bcalc plot "sin(x) * cos(x)" --range "0,6.28"
+bcalc plot "abs(sin(x))" --range "0,10"
 ```
 
 **Supported Functions:**
@@ -112,7 +142,9 @@ bcalc plot "log(x**2 + 1)" --range "0,10"
 ```bash
 bcalc sel plot
 plot > plot sin(x) --range 0,6.28
-
+plot > plot exp(-x) * cos(2*pi*x) --range 0,5
+plot > exit
+```
 
 ### Dimensional Analysis
 ```bash
