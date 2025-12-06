@@ -56,12 +56,16 @@ def evaluate_ast(node, variables):
     else:
         raise ValueError(f"Unsupported expression type: {type(node)}")
 
-def plot(func_str, x_range="0,10"):
+def plot(func_str, x_range="0,10", user_vars=None):
     try:
         start, end = map(float, x_range.split(","))
         x = np.linspace(start, end, 1000)
         
         variables = {"x": x}
+        if user_vars:
+            for var, val in user_vars.items():
+                if isinstance(val, (int, float)):
+                    variables[var] = val
         
         tree = ast.parse(func_str, mode='eval')
         
