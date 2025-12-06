@@ -21,7 +21,7 @@ class safeargparser(argparse.ArgumentParser):
 def lazy(name):
     return importlib.import_module(f"brliant_calc.{name}")
 
-def execute_command(arguments):
+def execute_command(arguments, user_vars=None):
     try:
         if arguments.command in ["basic", "b"]:
             mod = lazy("basic_ops")
@@ -113,7 +113,7 @@ def execute_command(arguments):
         elif arguments.command in ["plot", "pl"]:
             mod = lazy("plotting")
             func = getattr(mod, arguments.operation)
-            print(func(arguments.function, arguments.range))
+            print(func(arguments.function, arguments.range, user_vars))
 
         elif arguments.command in ["dim", "d"]:
             mod = lazy("dimensional_analysis")
@@ -370,6 +370,8 @@ def run_shell(category, parser):
     )
 
     console.print(f"[bold cyan]Entering {canonical_category} mode. Type 'exit' to quit.[/bold cyan]")
+    
+    variables = {}
 
     while True:
         try:
@@ -380,9 +382,34 @@ def run_shell(category, parser):
             if not line.strip():
                 continue
             
+            if line.strip().lower() == "vars":
+                if variables:
+                    console.print("[bold cyan]Stored Variables:[/bold cyan]")
+                    for var, val in variables.items():
+                        console.print(f"  {var} = {val}")
+                else:
+                    console.print("[yellow]No variables stored[/yellow]")
+                continue
+            
+            if '=' in line and not any(op in line for op in ['==', '!=', '<=', '>=']):
+                parts = line.split('=', 1)
+                var_name = parts[0].strip()
+                var_value = parts[1].strip()
+                
+                try:
+                    if var_value.replace('.','',1).replace('-','',1).isdigit():
+                        variables[var_name] = float(var_value)
+                    else:
+                        variables[var_name] = var_value
+                    console.print(f"[green]Variable '{var_name}' set to {variables[var_name]}[/green]")
+                    continue
+                except Exception as e:
+                    console.print(f"[red]Error setting variable: {e}[/red]")
+                    continue
+            
             full = [category] + shlex.split(line)
             args = parser.parse_args(full)
-            execute_command(args)
+            execute_command(args, variables)
             
         except ValueError as e:
             console.print(f"[red]Error: {e}[/red]")
