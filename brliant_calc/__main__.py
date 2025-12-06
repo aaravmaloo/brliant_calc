@@ -407,7 +407,16 @@ def run_shell(category, parser):
                     console.print(f"[red]Error setting variable: {e}[/red]")
                     continue
             
-            full = [category] + shlex.split(line)
+            
+            tokens = shlex.split(line)
+            substituted_tokens = []
+            for token in tokens:
+                if token in variables:
+                    substituted_tokens.append(str(variables[token]))
+                else:
+                    substituted_tokens.append(token)
+            
+            full = [category] + substituted_tokens
             args = parser.parse_args(full)
             execute_command(args, variables)
             
