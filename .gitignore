@@ -7,3 +7,4 @@ dist/*.exe
 /brliant_calc.egg-info
 
 /dist
+/tests/__pycache__
