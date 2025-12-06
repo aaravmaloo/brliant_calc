@@ -2,6 +2,17 @@ import argparse
 import sys
 import shlex
 import importlib
+from prompt_toolkit import PromptSession
+from prompt_toolkit.completion import NestedCompleter
+from prompt_toolkit.styles import Style
+from prompt_toolkit.lexers import PygmentsLexer
+from prompt_toolkit.auto_suggest import AutoSuggest, Suggestion
+from pygments.lexers.python import PythonLexer
+from rich.console import Console
+from rich.panel import Panel
+from rich.text import Text
+
+console = Console()
 
 class safeargparser(argparse.ArgumentParser):
     def error(self, message):
@@ -17,10 +28,11 @@ def execute_command(arguments):
             func = getattr(mod, arguments.operation)
             nums = arguments.numbers
             if arguments.operation == "mod" and len(nums) != 2:
-                print("Error: mod requires exactly two arguments")
+                console.print("[bold red]Error: mod requires exactly two arguments[/bold red]")
                 return
             result = func(*nums)
-            print(f"{result:g}" if isinstance(result, (int, float)) else result)
+            output = f"{result:g}" if isinstance(result, (int, float)) else str(result)
+            console.print(Panel(output, title="Result", expand=False, style="bold green"))
 
         elif arguments.command in ["adv", "a"]:
             mod = lazy("advanced_ops")
@@ -111,6 +123,7 @@ def execute_command(arguments):
             else:
                 print(func(arguments.value, arguments.from_unit, arguments.to_unit))
 
+
         elif arguments.command in ["precise", "pr"]:
             mod = lazy("precision_ops")
             func = getattr(mod, arguments.operation)
@@ -119,27 +132,276 @@ def execute_command(arguments):
             else:
                 print(func(arguments.n1, arguments.n2))
 
+        elif arguments.command in ["convolve", "cnv"]:
+            mod = lazy("advanced_ops")
+            result = mod.convolve(arguments.signal, arguments.kernel)
+            console.print(Panel(str(result), title="Convolution Result", expand=False, style="bold cyan"))
+
     except Exception as e:
-        print(f"an error has occurred: {e}")
+        console.print(f"[bold red]An error has occurred: {e}[/bold red]")
+
+class CommandAutoSuggest(AutoSuggest):
+    def __init__(self, commands, arg_map=None, example_map=None):
+        self.commands = commands
+        self.arg_map = arg_map or {}
+        self.example_map = example_map or {}
+
+    def get_suggestion(self, buffer, document):
+        text = document.text_before_cursor
+        
+        # Scenario 1: Typing a command (no space yet)
+        if ' ' not in text:
+            val = text.strip()
+            if not val:
+                return None
+            for cmd in self.commands:
+                if cmd.startswith(val):
+                    return Suggestion(cmd[len(val):])
+            return None
+            
+        # Scenario 2: Command typed
+        parts = text.split()
+        if not parts:
+            return None
+            
+        cmd = parts[0]
+        if cmd not in self.commands:
+            return None
+            
+        # If user just typed the command and a space, show the full example
+        if len(parts) == 1 and text.endswith(' '):
+            example = self.example_map.get(cmd)
+            if example:
+                return Suggestion(example)
+        
+        # Scenario 3: typing arguments / flags
+        # existing logic for flags
+        suggestions = self.arg_map.get(cmd, [])
+        is_new_arg = text.endswith(' ')
+        current_typing = "" if is_new_arg else parts[-1]
+        
+        for sugg in suggestions:
+            if is_new_arg:
+                return Suggestion(sugg)
+            if sugg.startswith(current_typing) and sugg != current_typing:
+                 return Suggestion(sugg[len(current_typing):])
+                 
+        return None
+                 
+        return None
 
 def run_shell(category, parser):
-    print(f"Entering {category} mode. Type 'exit' to quit.")
+    # console.print(f"[bold cyan]Entering {category} mode. Type 'exit' to quit.[/bold cyan]") -> Moved to end
+
+    # Handle aliases by mapping them to the canonical name
+    category_map = {
+        'b': 'basic', 'a': 'adv', 'cr': 'curr', 'cv': 'convert', 'v': 'vector', 
+        'p': 'physics', 'u': 'units', 'm': 'matrix', 'cx': 'complex', 
+        's': 'symbolic', 'pl': 'plot', 'd': 'dim', 'pr': 'precise', 'cnv': 'convolve', 'sh': 'sel'
+    }
+    canonical_category = category_map.get(category, category)
+
+    full_completer_dict = {
+        'basic': ['add', 'sub', 'mul', 'div', 'mod'],
+        'b': ['add', 'sub', 'mul', 'div', 'mod'],
+        'adv': ['sin', 'cos', 'tan', 'log', 'exp', 'nth', 'pow', 'log10', 'fact'],
+        'a': ['sin', 'cos', 'tan', 'log', 'exp', 'nth', 'pow', 'log10', 'fact'],
+        'curr': ['upd'],
+        'cr': ['upd'],
+        'convert': [],
+        'cv': [],
+        'vector': ['dot_product', 'cross_product', 'magnitude', 'normalize', 'angle_between'],
+        'v': ['dot_product', 'cross_product', 'magnitude', 'normalize', 'angle_between'],
+        'physics': ['force', 'kinetic_energy', 'potential_energy', 'ohms_law', 'work', 'speed', 'acceleration'],
+        'p': ['force', 'kinetic_energy', 'potential_energy', 'ohms_law', 'work', 'speed', 'acceleration'],
+        'units': ['length', 'mass', 'temperature', 'time', 'speed'],
+        'u': ['length', 'mass', 'temperature', 'time', 'speed'],
+        'matrix': ['mul', 'det', 'inv', 'eig', 'transpose', 'rank'],
+        'm': ['mul', 'det', 'inv', 'eig', 'transpose', 'rank'],
+        'complex': ['add', 'sub', 'mul', 'div', 'mag', 'phase', 'polar', 'rect'],
+        'cx': ['add', 'sub', 'mul', 'div', 'mag', 'phase', 'polar', 'rect'],
+        'symbolic': ['simplify', 'diff', 'integrate', 'solve', 'expand', 'factor'],
+        's': ['simplify', 'diff', 'integrate', 'solve', 'expand', 'factor'],
+        'plot': ['plot'],
+        'pl': ['plot'],
+        'dim': ['evaluate_dim', 'convert_dim'],
+        'd': ['evaluate_dim', 'convert_dim'],
+        'precise': ['add_fraction', 'sub_fraction', 'mul_fraction', 'div_fraction', 'add_decimal', 'sub_decimal', 'mul_decimal', 'div_decimal'],
+        'pr': ['add_fraction', 'sub_fraction', 'mul_fraction', 'div_fraction', 'add_decimal', 'sub_decimal', 'mul_decimal', 'div_decimal'],
+        'convolve': ['--kernel'],
+        'cnv': ['--kernel'],
+    }
+    
+    # Define arguments/suggestions mapping by category to prevent collisions
+    CATEGORY_ARG_SUGGESTIONS = {
+        'matrix': {
+            'mul': ['"[["', '--m2'], 
+            'det': ['"[["'],
+            'inv': ['"[["'],
+            'eig': ['"[["'],
+            'transpose': ['"[["'],
+            'rank': ['"[["'],
+        },
+        'plot': {
+            'plot': ['--range'],
+        },
+        'convolve': {
+            'convolve': ['--kernel'],
+        },
+        'complex': {
+            'add': ['--c2'],
+            'sub': ['--c2'],
+            'mul': ['--c2'],
+            'div': ['--c2'],
+            'rect': ['--c2'],
+        },
+        'precise': {
+             'div_decimal': ['--precision'],
+        },
+        'dim': {
+             'convert_dim': ['--value', '--from_unit', '--to_unit'],
+        },
+        'symbolic': {
+             'diff': ['--variable'],
+             'integrate': ['--variable'],
+        },
+        # Basic and others might not have specific flags, but we define them to be safe
+        'basic': {},
+        'adv': {},
+        'vector': {},
+        'physics': {},
+        'units': {},
+        'curr': {},
+    }
+    
+    arg_suggestions = CATEGORY_ARG_SUGGESTIONS.get(canonical_category, {})
+    
+    # Examples for full command suggestions (ghost text), organized by category to prevent collisions
+    # and ensure full coverage.
+    CATEGORY_EXAMPLES = {
+        'basic': {
+            'add': '10 5', 'sub': '10 5', 'mul': '2 3 4', 'div': '10 2', 'mod': '10 3'
+        },
+        'adv': {
+            'sin': '1.57', 'cos': '0', 'tan': '0.785', 'log': '100', 'exp': '1', 
+            'nth': '8 3', 'pow': '2 3', 'log10': '100', 'fact': '5'
+        },
+        'vector': {
+            'dot_product': '1 2 3 4 5 6', 'cross_product': '1 0 0 0 1 0', 
+            'magnitude': '3 4', 'normalize': '3 4', 'angle_between': '1 0 0 1'
+        },
+        'physics': {
+            'force': '10 9.8', # m a
+            'kinetic_energy': '10 5', # m v
+            'potential_energy': '10 5', # m h
+            'ohms_law': '2 10', # I R
+            'work': '10 5', # F d
+            'speed': '100 9.8', # d t
+            'acceleration': '10 2 0' # v t v0
+        },
+        'units': {
+            'length': '100 meter kilometer', 'mass': '1000 gram kilogram', 
+            'temperature': '100 celsius fahrenheit', 'time': '60 minute second', 'speed': '100 km/h m/s'
+        },
+        'matrix': {
+            'mul': '[[1,2],[3,4]] --m2 [[5,6],[7,8]]',
+            'det': '[[1,2],[3,4]]',
+            'inv': '[[1,2],[3,4]]',
+            'eig': '[[1,0],[0,1]]',
+            'transpose': '[[1,2],[3,4]]',
+            'rank': '[[1,2],[3,4]]'
+        },
+        'complex': {
+            'add': '1+2j --c2 3+4j', 'sub': '1+2j --c2 3+4j', 'mul': '1+2j --c2 3+4j', 
+            'div': '1+2j --c2 3+4j', 'mag': '3+4j', 'phase': '1+1j', 
+            'polar': '1+1j', 'rect': '1.414 0.785'
+        },
+        'symbolic': {
+            'simplify': 'x**2 + 2*x + 1', 'diff': 'x**2+1 --variable x', 
+            'integrate': 'sin(x) --variable x', 'solve': 'x**2-4', 
+            'expand': '(x+1)**2', 'factor': 'x**2-1'
+        },
+        'plot': {
+            'plot': 'sin(x) --range 0,10'
+        },
+        'dim': {
+            'evaluate_dim': '5*meter + 30*centimeter',
+            'convert_dim': '--value 100 --from_unit km/h --to_unit m/s'
+        },
+        'precise': {
+            'add_fraction': '1/3 1/6', 'sub_fraction': '1/2 1/3', 'mul_fraction': '1/2 1/3', 'div_fraction': '1/2 1/3',
+            'add_decimal': '1.1 2.2', 'sub_decimal': '2.2 1.1', 'mul_decimal': '1.1 2.2', 'div_decimal': '1 3 --precision 50'
+        },
+        'curr': {
+            'upd': ''
+        },
+        'convert': {
+             # convert mode uses args directly usually? No, it has generic args in main parser?
+             # cv.add_argument("from_currency")... 
+             # execute_command logic: mod.convert_currency(from, to, amount)
+             # But run_shell: full = [category] + args. 
+             # If category is 'convert', args should be 'USD INR 100'.
+             # In shell mode, we probably don't have a subcommand for convert?
+             # Completer dict says: 'convert': None.
+             # So user types arguments. Autosuggest won't help much here unless we hijack.
+        }, 
+        'convolve': {
+             # Similar to convert, arguments directly.
+        }
+    }
+    
+    
+    command_examples = CATEGORY_EXAMPLES.get(canonical_category, {})
+    
+    # Get commands specific to the current category
+    valid_commands = full_completer_dict.get(category, [])
+    # Add exit/quit to all modes
+    valid_commands.extend(['exit', 'quit'])
+    
+    # Create a simple nested dictionary for NestedCompleter to handle existing logic if needed
+    category_completer_dict = {cmd: None for cmd in valid_commands}
+    
+    completer = NestedCompleter.from_nested_dict(category_completer_dict)
+    
+    style = Style.from_dict({
+        'completion-menu.completion': 'bg:#008888 #ffffff',
+        'completion-menu.completion.current': 'bg:#00aaaa #000000',
+        'scrollbar.background': 'bg:#88aaaa',
+        'scrollbar.button': 'bg:#222222',
+        'prompt': '#00ffff bold',
+    })
+    
+    session = PromptSession(
+        completer=completer, 
+        style=style, 
+        lexer=PygmentsLexer(PythonLexer),
+        auto_suggest=CommandAutoSuggest(valid_commands, arg_suggestions, command_examples),
+        complete_while_typing=False
+    )
+
+    console.print(f"[bold cyan]Entering {canonical_category} mode. Type 'exit' to quit.[/bold cyan]")
+
     while True:
         try:
-            line = input(f"{category} > ")
+            line = session.prompt(f"{canonical_category} > ")
+            
             if line.strip().lower() in ["exit", "quit"]:
                 break
             if not line.strip():
                 continue
+            
             full = [category] + shlex.split(line)
             args = parser.parse_args(full)
             execute_command(args)
+            
         except ValueError as e:
-            print(f"error: {e}")
-        except SystemExit:
-            pass
+            console.print(f"[red]Error: {e}[/red]")
+        except KeyboardInterrupt:
+            continue
+        except EOFError:
+            break
         except Exception as e:
-            print(f"an error has occurred: {e}")
+            console.print(f"[bold red]An error has occurred: {e}[/bold red]")
 
 def main():
     parser = safeargparser(description="A command-line advanced scientific calculator")
@@ -191,7 +453,7 @@ def main():
     sym.add_argument("--variable", default="x")
 
     plot = sub.add_parser("plot", aliases=["pl"])
-    plot.add_argument("operation", choices=["plot"])
+    plot.add_argument("operation", nargs='?', default="plot", choices=["plot"])
     plot.add_argument("function")
     plot.add_argument("--range", default="0,10")
 
@@ -208,10 +470,29 @@ def main():
     pr.add_argument("n2")
     pr.add_argument("--precision", type=int, default=28)
 
-    sel = sub.add_parser("sel", aliases=["sh"])
-    sel.add_argument("category", choices=["basic", "adv", "curr", "convert", "vector", "physics", "units"])
+    cnv = sub.add_parser("convolve", aliases=["cnv"])
+    cnv.add_argument("signal", type=float, nargs="+", help="Input signal values")
+    cnv.add_argument("--kernel", "-k", type=float, nargs="+", required=True, help="Kernel values for convolution")
 
-    # Handle alias management before normal argument parsing
+    sel = sub.add_parser("sel", aliases=["sh"])
+    sel.add_argument("category", choices=[
+        "basic", "b", 
+        "adv", "a", 
+        "curr", "cr", 
+        "convert", "cv", 
+        "vector", "v", 
+        "physics", "p", 
+        "units", "u",
+        "matrix", "m",
+        "complex", "cx",
+        "symbolic", "s",
+        "plot", "pl",
+        "dim", "d",
+        "precise", "pr",
+        "convolve", "cnv"
+    ])
+
+    
     if len(sys.argv) > 1:
         if sys.argv[1] == "-changeCall" or sys.argv[1] == "--changeCall":
             if len(sys.argv) < 3:
