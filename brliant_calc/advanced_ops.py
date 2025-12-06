@@ -32,3 +32,6 @@ def fact(n):
     return math.factorial(n)
 
 
+
+def convolve(signal, kernel):
+    return np.convolve(signal, kernel, mode='full')
