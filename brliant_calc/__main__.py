@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore", message=".*found in sys.modules.*", category=RuntimeWarning)
+
 import argparse
 import sys
 import shlex
@@ -556,6 +559,28 @@ def main():
         elif sys.argv[1] == "-listAliases" or sys.argv[1] == "--listAliases":
             from brliant_calc.alias_manager import list_aliases
             list_aliases()
+            sys.exit(0)
+        
+        elif sys.argv[1] == "-runtests" or sys.argv[1] == "--runtests":
+            import unittest
+            import os
+            tests_dir = os.path.join(os.path.dirname(__file__), '..', 'tests')
+            if not os.path.exists(tests_dir):
+                print("Error: tests directory not found")
+                sys.exit(1)
+            
+            loader = unittest.TestLoader()
+            suite = loader.discover(tests_dir, pattern='test_*.py')
+            runner = unittest.TextTestRunner(verbosity=2)
+            result = runner.run(suite)
+            sys.exit(0 if result.wasSuccessful() else 1)
+        
+        elif sys.argv[1] == "-version" or sys.argv[1] == "--version" or sys.argv[1] == "-v":
+            try:
+                from importlib.metadata import version
+                print(f"brliant_calc version {version('brliant_calc')}")
+            except Exception:
+                print("brliant_calc version 2.1.2")
             sys.exit(0)
     
     try:
