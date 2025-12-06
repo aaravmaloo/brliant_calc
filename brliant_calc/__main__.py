@@ -203,8 +203,8 @@ def run_shell(category, parser):
     full_completer_dict = {
         'basic': ['add', 'sub', 'mul', 'div', 'mod'],
         'b': ['add', 'sub', 'mul', 'div', 'mod'],
-        'adv': ['sin', 'cos', 'tan', 'log', 'exp', 'nth', 'pow', 'log10', 'fact'],
-        'a': ['sin', 'cos', 'tan', 'log', 'exp', 'nth', 'pow', 'log10', 'fact'],
+        'adv': ['sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh', 'arcsinh', 'arccosh', 'arctanh', 'log', 'log10', 'log2', 'exp', 'sqrt', 'abs', 'nth', 'pow', 'fact', 'floor', 'ceil', 'round', 'trunc', 'sign', 'mean', 'median', 'std', 'var', 'min', 'max', 'sum', 'prod'],
+        'a': ['sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh', 'tanh', 'arcsinh', 'arccosh', 'arctanh', 'log', 'log10', 'log2', 'exp', 'sqrt', 'abs', 'nth', 'pow', 'fact', 'floor', 'ceil', 'round', 'trunc', 'sign', 'mean', 'median', 'std', 'var', 'min', 'max', 'sum', 'prod'],
         'curr': ['upd'],
         'cr': ['upd'],
         'convert': [],
@@ -280,8 +280,13 @@ def run_shell(category, parser):
             'add': '10 5', 'sub': '10 5', 'mul': '2 3 4', 'div': '10 2', 'mod': '10 3'
         },
         'adv': {
-            'sin': '1.57', 'cos': '0', 'tan': '0.785', 'log': '100', 'exp': '1', 
-            'nth': '8 3', 'pow': '2 3', 'log10': '100', 'fact': '5'
+            'sin': '1.57', 'cos': '0', 'tan': '0.785', 'arcsin': '0.5', 'arccos': '0.5', 'arctan': '1',
+            'sinh': '1', 'cosh': '0', 'tanh': '0.5', 'arcsinh': '1', 'arccosh': '2', 'arctanh': '0.5',
+            'log': '100', 'log10': '100', 'log2': '8', 'exp': '1', 'sqrt': '16', 'abs': '-5',
+            'nth': '8 3', 'pow': '2 3', 'fact': '5',
+            'floor': '3.7', 'ceil': '3.2', 'round': '3.14159 2', 'trunc': '3.9', 'sign': '-42',
+            'mean': '1 2 3 4 5', 'median': '1 2 3 4 5', 'std': '1 2 3 4 5', 'var': '1 2 3',
+            'min': '5 2 8 1 9', 'max': '5 2 8 1 9', 'sum': '1 2 3 4 5', 'prod': '2 3 4'
         },
         'vector': {
             'dot_product': '1 2 3 4 5 6', 'cross_product': '1 0 0 0 1 0', 
@@ -446,7 +451,14 @@ def main():
     cv.add_argument("amount", type=float)
 
     adv = sub.add_parser("adv", aliases=["a"])
-    adv.add_argument("operation", choices=["sin", "cos", "tan", "log", "exp", "nth", "pow", "log10", "fact"])
+    adv.add_argument("operation", choices=[
+        "sin", "cos", "tan", "arcsin", "arccos", "arctan",
+        "sinh", "cosh", "tanh", "arcsinh", "arccosh", "arctanh",
+        "log", "log10", "log2", "exp", "sqrt", "abs",
+        "nth", "pow", "fact",
+        "floor", "ceil", "round", "trunc", "sign",
+        "mean", "median", "std", "var", "min", "max", "sum", "prod"
+    ])
     adv.add_argument("numbers", type=float, nargs="+")
 
     vec = sub.add_parser("vector", aliases=["v"])
