@@ -1,8 +1,3 @@
-"""
-Utility module for managing custom command aliases for brliant_calc.
-Allows users to create custom shortcuts like 'bcalc' instead of 'brliant_calc'.
-"""
-
 import os
 import sys
 import platform
@@ -11,7 +6,7 @@ from pathlib import Path
 
 
 def get_config_dir():
-    """Get the configuration directory for brliant_calc."""
+    
     if platform.system() == "Windows":
         config_dir = Path(os.environ.get("APPDATA", "")) / "brliant_calc"
     else:
@@ -22,18 +17,18 @@ def get_config_dir():
 
 
 def get_config_file():
-    """Get the path to the configuration file."""
+    
     return get_config_dir() / "config.json"
 
 
 def get_scripts_dir():
-    """Get the directory where Python scripts are installed."""
+    
     import site
     
     if platform.system() == "Windows":
         scripts_dir = None
         
-        # Try sys.prefix first (works in normal Python)
+        
         if sys.prefix and sys.prefix != 'None':
             try:
                 scripts_dir = Path(sys.prefix) / "Scripts"
@@ -42,7 +37,7 @@ def get_scripts_dir():
             except:
                 pass
         
-        # Try user site-packages
+        
         try:
             if hasattr(site, 'USER_BASE') and site.USER_BASE:
                 user_scripts = Path(site.USER_BASE) / "Scripts"
@@ -54,7 +49,7 @@ def get_scripts_dir():
         except:
             pass
         
-        # Try to find from executable location
+        
         try:
             if sys.executable:
                 python_dir = Path(sys.executable).parent
@@ -64,7 +59,7 @@ def get_scripts_dir():
         except:
             pass
         
-        # Fallback to AppData
+        
         try:
             appdata = os.environ.get('APPDATA')
             if appdata:
@@ -75,13 +70,13 @@ def get_scripts_dir():
         except:
             pass
         
-        # Last resort
+        
         fallback = Path.home() / ".brliant_calc" / "Scripts"
         fallback.mkdir(parents=True, exist_ok=True)
         return fallback
         
     else:
-        # Unix-like systems
+        
         if sys.prefix and sys.prefix != 'None':
             try:
                 scripts_dir = Path(sys.prefix) / "bin"
@@ -90,7 +85,7 @@ def get_scripts_dir():
             except:
                 pass
         
-        # Try user site-packages
+        
         try:
             if hasattr(site, 'USER_BASE') and site.USER_BASE:
                 user_bin = Path(site.USER_BASE) / "bin"
@@ -109,23 +104,23 @@ def get_scripts_dir():
 
 
 def create_alias(alias_name):
-    """Create a command alias for brliant_calc."""
+    
     import subprocess
     import ctypes
     
     if platform.system() == "Windows":
-        # Get the Scripts directory where Python executables are installed
+        
         scripts_dir = get_scripts_dir()
         alias_path = scripts_dir / f"{alias_name}.bat"
         wrapper_content = f'@echo off\nbrliant_calc %*\n'
         
-        # Check if we have write permissions
+        
         try:
-            # Try to write directly first
+            
             with open(alias_path, 'w') as f:
                 f.write(wrapper_content)
             
-            # Save alias to config
+            
             config_file = get_config_file()
             config = {}
             if config_file.exists():
@@ -150,12 +145,12 @@ def create_alias(alias_name):
             return True
             
         except PermissionError:
-            # Need elevation - use sudo
+           
             print(f"⚠ Creating alias requires administrator privileges.")
             print(f"  Attempting to elevate with sudo...")
             
             try:
-                # Create a temporary Python script to write the file
+                
                 temp_script = Path.home() / f".brliant_calc_temp_{alias_name}.py"
                 script_content = f'''import sys
 from pathlib import Path
@@ -174,19 +169,19 @@ except Exception as e:
                 with open(temp_script, 'w', encoding='utf-8') as f:
                     f.write(script_content)
                 
-                # Run with sudo
+                
                 result = subprocess.run(
                     ['sudo', 'python', str(temp_script)],
                     capture_output=True,
                     text=True
                 )
                 
-                # Clean up temp script
+                
                 if temp_script.exists():
                     temp_script.unlink()
                 
                 if result.returncode == 0:
-                    # Save alias to config
+                    
                     config_file = get_config_file()
                     config = {}
                     if config_file.exists():
@@ -226,18 +221,18 @@ except Exception as e:
             return False
     
     else:
-        # Unix-like systems
+        
         scripts_dir = get_scripts_dir()
         alias_path = scripts_dir / alias_name
         wrapper_content = f'#!/bin/sh\nbrliant_calc "$@"\n'
         
         try:
-            # Try direct write first
+            
             with open(alias_path, 'w') as f:
                 f.write(wrapper_content)
             os.chmod(alias_path, 0o755)
             
-            # Save alias to config
+           
             config_file = get_config_file()
             config = {}
             if config_file.exists():
@@ -262,14 +257,14 @@ except Exception as e:
             return True
             
         except PermissionError:
-            # Need sudo
+            
             print(f"⚠ Creating alias requires sudo privileges.")
             print(f"  Attempting to elevate with sudo...")
             
             try:
                 import subprocess
                 
-                # Create temp script
+                
                 temp_script = Path.home() / f".brliant_calc_temp_{alias_name}.sh"
                 script_content = f'''#!/bin/sh
 cat > "{alias_path}" << 'EOF'
@@ -280,12 +275,12 @@ chmod 755 "{alias_path}"
                     f.write(script_content)
                 os.chmod(temp_script, 0o755)
                 
-                # Run with sudo
+            
                 result = subprocess.run(['sudo', str(temp_script)], capture_output=True, text=True)
                 temp_script.unlink()
                 
                 if result.returncode == 0:
-                    # Save to config
+                 
                     config_file = get_config_file()
                     config = {}
                     if config_file.exists():
@@ -322,7 +317,7 @@ chmod 755 "{alias_path}"
 
 
 def remove_alias(alias_name):
-    """Remove a command alias."""
+  
     import subprocess
     
     config_file = get_config_file()
@@ -347,10 +342,10 @@ def remove_alias(alias_name):
             return False
         
         try:
-            # Try to remove directly
+          
             alias_path.unlink()
             
-            # Remove from config
+           
             if 'aliases' in config and alias_name in config['aliases']:
                 config['aliases'].remove(alias_name)
             
@@ -372,7 +367,7 @@ def remove_alias(alias_name):
                     result = subprocess.run(['sudo', 'rm', str(alias_path)], capture_output=True)
                 
                 if result.returncode == 0:
-                    # Remove from config
+                   
                     if 'aliases' in config and alias_name in config['aliases']:
                         config['aliases'].remove(alias_name)
                     
