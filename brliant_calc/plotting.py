@@ -25,9 +25,7 @@ FUNCTIONS = {
 
 def evaluate_ast(node, variables):
     
-    if isinstance(node, ast.Num):  
-        return node.n
-    elif isinstance(node, ast.Constant): 
+    if isinstance(node, ast.Constant): 
         return node.value
     elif isinstance(node, ast.Name):
         if node.id in variables:
