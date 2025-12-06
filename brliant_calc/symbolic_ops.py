@@ -10,7 +10,7 @@ def integrate(expr_str, var="x"):
     return sympy.integrate(expr_str, var)
 
 def solve(expr_str, var="x"):
-    # Assumes expr_str = 0
+
     return sympy.solve(expr_str, var)
 
 def expand(expr_str):
