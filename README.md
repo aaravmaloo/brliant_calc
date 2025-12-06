@@ -190,9 +190,31 @@ Stored Variables:
 plot > exit
 ```
 
+**Using Variables in Calculations:**
+```bash
+bcalc sel basic
+basic > x = 5
+Variable 'x' set to 5.0
+basic > y = 120
+Variable 'y' set to 120.0
+basic > mul x y
+600
+basic > add x y
+125
+basic > vars
+Stored Variables:
+  x = 5.0
+  y = 120.0
+basic > exit
+```
+
+Variables work in **all modes** - basic arithmetic, advanced math, plotting, etc.
+
 Variables are stored in memory until you exit the shell mode. You can use them in:
-- Plot expressions: `plot sin(a*x)`, `plot x**2 + a*x + b`
-- Any calculations within the session
+- **Arithmetic**: `mul x y`, `add a b c`, `div x y`
+- **Plot expressions**: `plot sin(a*x)`, `plot x**2 + a*x + b`
+- **Advanced math**: `sin x`, `log y`, `pow x y`
+- **Any calculations** within the session
 
 **Example:**
 ```bash
