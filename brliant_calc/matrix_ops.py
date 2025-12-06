@@ -2,22 +2,19 @@ import numpy as np
 import ast
 
 def parse_matrix(matrix_str):
-    """
-    Parses a string representation of a matrix into a numpy array.
-    Expected format: "[1,2],[3,4]" or "[[1,2],[3,4]]"
-    """
+  
     try:
-        # Try to evaluate as a python list
+  
         matrix_list = ast.literal_eval(matrix_str)
         if isinstance(matrix_list, list):
              return np.array(matrix_list)
-        # If it's a tuple (which might happen if user omits outer brackets but uses commas), try to fix
+    
         if isinstance(matrix_list, tuple):
              return np.array(matrix_list)
     except:
         pass
     
-    # Fallback for "[1,2],[3,4]" format which isn't valid python literal without outer brackets
+   
     try:
         if not matrix_str.strip().startswith("[["):
              matrix_str = f"[{matrix_str}]"
