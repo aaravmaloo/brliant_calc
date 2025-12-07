@@ -1,30 +1,9 @@
 # Brliant Calculator
 
-> **A lightning-fast, command-line scientific calculator designed for professionals who value speed and precision.**
-
-Once you learn the syntax, Brliant Calculator becomes **significantly faster** than traditional GUI calculators or reaching for your mouse. Execute complex mathematical operations in milliseconds with simple, intuitive commands.
+Once you learn the syntax, Brliant Calculator becomes **significantly faster** than traditional GUI calculators or reaching for your mouse.
 
 [![Python Version](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
----
-
-## Why Brliant Calculator?
-
-### ⚡ **Speed First**
-Traditional calculators require: *Open app → Click buttons → Wait → Click more buttons*  
-Brliant Calculator: `bcalc adv sin 1.57` → **Instant result**
-
-### 🎯 **Power Without Complexity**
-- **25+ Mathematical Operations**: From basic arithmetic to advanced statistics
-- **Secure Expression Evaluation**: AST-based parsing prevents code injection
-- **Variable Storage**: Define once, use everywhere in your session
-- **Context-Aware Autocomplete**: Smart suggestions based on your current mode
-
-### 🚀 **Workflow Integration**
-- **CLI-Native**: Perfect for scripts, automation, and terminal workflows
-- **Cross-Platform**: Works on Windows, macOS, and Linux
-- **Lightweight**: No bloated GUI, just pure computational power
 
 ---
 
@@ -36,20 +15,19 @@ Brliant Calculator: `bcalc adv sin 1.57` → **Instant result**
 pip install brliant_calc
 ```
 
-### Your First Calculation
+### Examples
 
 ```bash
-# Basic arithmetic
+
 bcalc basic add 5 10 15
-# Output: 30
 
-# Trigonometry (radians)
+
+
 bcalc adv sin 1.57
-# Output: 0.999999...
 
-# Statistics
+
 bcalc adv mean 10 20 30 40 50
-# Output: 30.0
+
 ```
 
 ### Create a Custom Alias
@@ -58,145 +36,133 @@ Make it even faster by creating a short alias:
 
 ```bash
 bcalc alias create bc
-# Now use: bc basic add 5 10
+
 ```
 
 ---
 
 ## Core Features
 
-### 📊 **Comprehensive Mathematics**
+### **Comprehensive Mathematics**
 
 **Basic Arithmetic**
 ```bash
-bcalc basic add 10 5 3          # 18
-bcalc basic mul 2 3 4           # 24
-bcalc basic div 100 4           # 25
+bcalc basic add 10 5 3         
+bcalc basic mul 2 3 4         
+bcalc basic div 100 4        
 ```
 
 **Trigonometry & Hyperbolic Functions**
 ```bash
-bcalc adv sin 1.57              # 0.9999996...
-bcalc adv arcsin 0.5            # 0.5236 (π/6)
-bcalc adv sinh 1                # 1.1752
+bcalc adv sin 1.57           
+bcalc adv arcsin 0.5          
+bcalc adv sinh 1              
 ```
 
 **Logarithms & Exponentials**
 ```bash
-bcalc adv log 100               # 4.605 (natural log)
-bcalc adv log10 1000            # 3.0
-bcalc adv log2 256              # 8.0
-bcalc adv exp 2                 # 7.389
+bcalc adv log 100              
+bcalc adv log10 1000          
+bcalc adv log2 256            
+bcalc adv exp 2               
 ```
 
 **Statistics**
 ```bash
-bcalc adv mean 10 20 30 40      # 25.0
-bcalc adv std 2 4 6 8 10        # 2.828
-bcalc adv median 1 3 5 7 9      # 5.0
-bcalc adv max 15 42 8 23        # 42
+bcalc adv mean 10 20 30 40     
+bcalc adv std 2 4 6 8 10       
+bcalc adv median 1 3 5 7 9   
+bcalc adv max 15 42 8 23        
 ```
 
 **Rounding & Precision**
 ```bash
-bcalc adv floor 3.7             # 3.0
-bcalc adv ceil 3.2              # 4.0
-bcalc adv round 3.14159 2       # 3.14
-bcalc adv sqrt 256              # 16.0
+bcalc adv floor 3.7             
+bcalc adv ceil 3.2              
+bcalc adv round 3.14159 2       
+bcalc adv sqrt 256              
 ```
 
-### 🔢 **Matrix Operations**
+### **Matrix Operations**
 
 ```bash
-# Matrix multiplication
+
 bcalc matrix mul "[[1,2],[3,4]]" --m2 "[[5,6],[7,8]]"
-# Output: [[19,22],[43,50]]
 
-# Determinant
+
+
 bcalc matrix det "[[1,2],[3,4]]"
-# Output: -2.0
 
-# Inverse
+
+
 bcalc matrix inv "[[1,2],[3,4]]"
-# Output: [[-2.0,1.0],[1.5,-0.5]]
 
-# Eigenvalues
+
+
 bcalc matrix eig "[[1,2],[3,4]]"
-# Output: [-0.372, 5.372]
+
 ```
 
-### 🌀 **Complex Numbers**
+### **Complex Numbers**
 
 ```bash
-bcalc complex add "1+2j" --c2 "3+4j"        # (4+6j)
-bcalc complex mul "2+3j" --c2 "1-1j"        # (5+1j)
-bcalc complex polar "1+1j"                   # 1.414∠45°
-bcalc complex mag "3+4j"                     # 5.0
+bcalc complex add "1+2j" --c2 "3+4j"        
+bcalc complex mul "2+3j" --c2 "1-1j"        
+bcalc complex polar "1+1j"                   
+bcalc complex mag "3+4j"                     
 ```
 
-### 🎨 **Function Plotting**
+### **Function Plotting**
 
 Visualize mathematical functions with secure AST parsing:
 
 ```bash
-# Basic plot
+
 bcalc plot "sin(x)" --range "0,6.28"
 
-# Nested expressions
+
 bcalc plot "sin(x**2 + pi)" --range "0,10"
 bcalc plot "exp(-x) * cos(2*pi*x)" --range "0,5"
 
-# Polynomial
 bcalc plot "x**3 - 2*x**2 + x" --range "-2,3"
 ```
 
 **Supported Functions**: `sin`, `cos`, `tan`, `exp`, `log`, `sqrt`, `abs`, and all hyperbolic variants  
 **Constants**: `pi`, `e`
 
-### 🧮 **Symbolic Mathematics**
+### **Symbolic Mathematics**
 
 ```bash
-# Differentiation
+
 bcalc symbolic diff "x**2 + 2*x + 1" --variable x
-# Output: 2*x + 2
 
-# Integration
 bcalc symbolic integrate "sin(x)" --variable x
-# Output: -cos(x)
 
-# Solve equations
 bcalc symbolic solve "x**2 - 4" --variable x
-# Output: [-2, 2]
 
-# Simplification
 bcalc symbolic simplify "(x+1)**2"
-# Output: x**2 + 2*x + 1
+
 ```
 
-### 🔁 **Unit Conversions**
+### **Unit Conversions**
 
 ```bash
-bcalc units length 1000 meter kilometer     # 1.0
-bcalc units temperature 100 celsius fahrenheit # 212.0
-bcalc units mass 1 kilogram pound           # 2.205
+bcalc units length 1000 meter kilometer     
+bcalc units temperature 100 celsius fahrenheit 
+bcalc units mass 1 kilogram pound           
 ```
 
-### 💱 **Currency Conversion**
+### **Currency Conversion**
 
 ```bash
-# Update exchange rates
 bcalc curr upd
 
-# Convert currency
 bcalc convert USD EUR 100
-# Output: 100 USD = 92.50 EUR
 ```
 
 ---
 
-## 🎯 Interactive Shell Mode
-
-**The fastest way to do multiple calculations** - enter a mode once, run unlimited operations:
+## Interactive Shell Mode
 
 ```bash
 bcalc sel basic
@@ -215,13 +181,6 @@ Stored Variables:
 basic > exit
 ```
 
-### Smart Autocomplete
-
-- **Context-Aware Suggestions**: Only see commands relevant to your mode
-- **Inline Ghost Text**: See complete examples as you type
-- **Right Arrow to Accept**: Fast command completion
-- **Full Usage Examples**: Instant syntax guidance
-
 ### Variable Storage
 
 Define variables once, use them everywhere:
@@ -239,92 +198,87 @@ Variables work in **all modes**:
 - Advanced math: `sin x`, `pow x 2`
 - Plotting: `sin(a*x)`, `x**2 + b*x + c`
 
----
 
-## 📚 Advanced Examples
+
+## Advanced Examples
 
 ### Physics Calculations
 
 ```bash
-# Force (F = ma)
-bcalc physics force 10 9.8              # 98 N
+bcalc physics force 10 9.8              
 
-# Kinetic Energy
-bcalc physics kinetic_energy 5 10       # 250 J
+bcalc physics kinetic_energy 5 10       
 
-# Ohm's Law
-bcalc physics ohms_law 2 10             # 20 V
+bcalc physics ohms_law 2 10             
 ```
 
 ### Vector Operations
 
 ```bash
-# Dot product
-bcalc vector dot_product 1 2 3 4 5 6    # 32
 
-# Cross product
-bcalc vector cross_product 1 0 0  0 1 0 # [0, 0, 1]
+bcalc vector dot_product 1 2 3 4 5 6    
 
-# Magnitude
-bcalc vector magnitude 3 4              # 5.0
+bcalc vector cross_product 1 0 0  0 1 0 
+
+
+bcalc vector magnitude 3 4             
 ```
 
 ### Dimensional Analysis
 
 ```bash
-# Evaluate expressions with units
-bcalc dim evaluate_dim "5 * meter + 30 * centimeter"
-# Output: 5.3 meter
 
-# Unit conversion
+bcalc dim evaluate_dim "5 * meter + 30 * centimeter"
+
+
+
 bcalc dim convert_dim --value 100 --from_unit "km/h" --to_unit "m/s"
-# Output: 27.78 m/s
+
 ```
 
 ### Arbitrary Precision
 
 ```bash
-# Exact fraction arithmetic
-bcalc precise add_fraction "1/3" "1/6"  # 1/2
 
-# High-precision decimals
+bcalc precise add_fraction "1/3" "1/6" 
+
+
 bcalc precise div_decimal "1" "3" --precision 50
-# Output: 0.33333333333333333333333333333333333333333333333333
+
 ```
 
 ### Convolutions
 
 ```bash
 bcalc convolve 1 2 3 -k 0.5 0.5
-# Output: [0.5 1.5 2.5 1.5]
 ```
 
 ---
 
-## 🎨 Command Aliases
+## Command Aliases
 
-Create shorter commands for maximum speed:
+Create shorter commands:
 
 ```bash
-# Create alias
+
 bcalc alias create bc
 
-# Now use your alias
-bc basic add 5 10               # Instead of: bcalc basic add 5 10
-bc adv sin 1.57                 # Instead of: bcalc adv sin 1.57
 
-# List aliases
+bc basic add 5 10
+bc adv sin 1.57
+
+
 bcalc alias list
 
-# Remove alias
+
 bcalc alias remove bc
 ```
 
 ---
 
-## ⌨️ Shortcuts
+## Shortcuts
 
-Save even more time with built-in category aliases:
+For convenience, you can use the following shortcuts:
 
 - `basic` → `b`
 - `adv` → `a`
@@ -344,16 +298,8 @@ Save even more time with built-in category aliases:
 
 ---
 
-## 🛡️ Security
 
-Brliant Calculator uses **AST-based expression parsing** instead of `eval()`, preventing arbitrary code execution. All mathematical expressions are parsed through a secure Abstract Syntax Tree with whitelisted operations only.
-
-✅ Safe: `plot "sin(x**2)"`  
-❌ Blocked: `plot "__import__('os').system('calc')"`
-
----
-
-## 📖 Full Operation Reference
+## Full Operation Reference
 
 ### Basic Arithmetic
 `add`, `sub`, `mul`, `div`, `mod`
@@ -384,24 +330,6 @@ Brliant Calculator uses **AST-based expression parsing** instead of `eval()`, pr
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-MIT License - See LICENSE file for details
-
----
-
-## 💡 Pro Tips
-
-1. **Use the shell mode** (`bcalc sel basic`) for multiple calculations - way faster than typing `bcalc` every time
-2. **Create variables** for repeated values: `x = 3.14159` then use `x` in calculations
-3. **Set up a short alias** like `bc` for maximum speed
-4. **Learn the shortcuts** - `bcalc b add 5 10` is faster than `bcalc basic add 5 10`
-5. **Use autocomplete** in shell mode - press Tab or let the ghost text guide you
-
----
-
-**Made with ❤️ for developers, engineers, and scientists who value speed and precision.**
+You can contribute if you want to. feel free to submit a Pull Request!
