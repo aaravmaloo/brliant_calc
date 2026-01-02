@@ -333,3 +333,51 @@ For convenience, you can use the following shortcuts:
 ## Contributing
 
 You can contribute if you want to. feel free to submit a Pull Request!
+
+---
+
+## Advanced Matrix Solvers
+
+The CLI now supports 19 advanced matrix solvers for file-based matrix operations. Below are some examples:
+
+**LU Decomposition**
+```bash
+bcalc matrix lu "[[4,3],[6,3]]"
+```
+
+**QR Decomposition**
+```bash
+bcalc matrix qr "[[1,2],[3,4]]"
+```
+
+**Cholesky Decomposition**
+```bash
+bcalc matrix cholesky "[[4, 12], [12, 37]]"
+```
+
+**Singular Value Decomposition (SVD)**
+```bash
+bcalc matrix svd "[[1, 0], [0, 1]]"
+```
+
+**Solve Linear Systems**
+```bash
+bcalc matrix solve "[[3, 1], [1, 2]]" --b "[9, 8]"
+```
+
+**Matrix Exponential**
+```bash
+bcalc matrix exp "[[0, 1], [-1, 0]]"
+```
+
+**Generalized Eigenvalues**
+```bash
+bcalc matrix generalized_eigen "[[1, 2], [3, 4]]" --b "[[5, 6], [7, 8]]"
+```
+
+**Polar Decomposition**
+```bash
+bcalc matrix polar "[[1, 2], [3, 4]]"
+```
+
+For the full list of supported solvers, refer to the documentation.
