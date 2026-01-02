@@ -49,9 +49,9 @@ def execute_command(arguments, user_vars=None):
 
         elif arguments.command in ["curr", "cr"]:
             if arguments.update == "upd":
-                from currency_converter.app import get_curr_json
-                get_curr_json()
-                print("Exchange rates updated successfully.")
+                from convert_currency import CurrencyConverter
+                c = CurrencyConverter()
+                print("Exchange rates are updated automatically by the CurrencyConverter library.")
 
         elif arguments.command in ["convert", "cv"]:
             mod = importlib.import_module("brliant_calc.convert_currency")
@@ -92,6 +92,12 @@ def execute_command(arguments, user_vars=None):
             func = getattr(mod, arguments.operation)
             if arguments.operation == "mul":
                 print(func(arguments.m1, arguments.m2))
+            elif arguments.operation in ["solve", "least_squares", "generalized_eigen", "solve_triangular"]:
+                print(func(arguments.m1, arguments.b))
+            elif arguments.operation == "sylvester":
+                print(func(arguments.m1, arguments.b, arguments.c))
+            elif arguments.operation == "power":
+                print(func(arguments.m1, arguments.n))
             else:
                 print(func(arguments.m1))
 
@@ -479,9 +485,18 @@ def main():
     units.add_argument("to_unit")
 
     matrix = sub.add_parser("matrix", aliases=["m"])
-    matrix.add_argument("operation", choices=["mul", "det", "inv", "eig", "transpose", "rank"])
+    matrix.add_argument("operation", choices=[
+        "mul", "det", "inv", "eig", "transpose", "rank",
+        "lu", "qr", "cholesky", "svd", "solve", "least_squares",
+        "null_space", "condition_number", "exp", "sylvester",
+        "generalized_eigen", "power", "det_via_lu", "inv_via_lu",
+        "log", "sqrt", "polar", "solve_triangular"
+    ])
     matrix.add_argument("m1")
     matrix.add_argument("--m2")
+    matrix.add_argument("--b")
+    matrix.add_argument("--c")
+    matrix.add_argument("--n", type=int)
 
     comp = sub.add_parser("complex", aliases=["cx"])
     comp.add_argument("operation", choices=["add", "sub", "mul", "div", "mag", "phase", "polar", "rect"])
