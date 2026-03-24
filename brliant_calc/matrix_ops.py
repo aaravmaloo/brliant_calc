@@ -1,6 +1,7 @@
 import numpy as np
 import ast
 import scipy
+from scipy import linalg
 
 def parse_matrix(matrix_str):
   
