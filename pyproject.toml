@@ -14,7 +14,7 @@ authors = [
 ]
 keywords = ["calculator", "scientific", "mathematics", "cli", "symbolic", "matrix", "physics", "number-theory", "combinatorics", "geometry", "finance", "signal-processing", "calculus"]
 classifiers = [
-    "Development Status :: 4 - Production/Stable",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Education",
