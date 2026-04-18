@@ -6,3 +6,4 @@ currency-converter>=0.5.0
 prompt_toolkit>=3.0.0
 rich>=10.0.0
 pygments>=2.0.0
+scipy>=1.7.0
