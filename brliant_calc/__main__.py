@@ -306,6 +306,62 @@ def execute_command(arguments, user_vars=None):
                 result = func()
             console.print(Panel(str(result), title="History", expand=False, style="bold cyan"))
 
+        elif arguments.command in ["prob", "pb"]:
+            mod = lazy("probability")
+            func = getattr(mod, arguments.operation)
+            if arguments.operation in ["t_test_ind"]:
+                mid = len(arguments.args) // 2
+                result = func(arguments.args[:mid], arguments.args[mid:])
+            elif arguments.operation in ["t_test_1samp"]:
+                result = func(arguments.args[:-1], arguments.args[-1])
+            else:
+                result = func(*arguments.args)
+            console.print(Panel(str(result), title="Probability", expand=False, style="bold green"))
+
+        elif arguments.command in ["logic", "lg"]:
+            mod = lazy("logic")
+            func = getattr(mod, arguments.operation)
+            result = func(*arguments.args)
+            console.print(Panel(str(result), title="Digital Logic", expand=False, style="bold green"))
+
+        elif arguments.command in ["info", "it"]:
+            mod = lazy("info_theory")
+            func = getattr(mod, arguments.operation)
+            if arguments.operation in ["mutual_information"]:
+                import ast
+                p_xy = ast.literal_eval(arguments.args[0])
+                result = func(p_xy)
+            elif arguments.operation in ["kl_divergence", "cross_entropy"]:
+                mid = len(arguments.args) // 2
+                result = func(arguments.args[:mid], arguments.args[mid:])
+            else:
+                result = func(*arguments.args)
+            console.print(Panel(str(result), title="Information Theory", expand=False, style="bold cyan"))
+
+        elif arguments.command in ["numerical", "nm"]:
+            mod = lazy("numerical")
+            func = getattr(mod, arguments.operation)
+            if arguments.operation == "polynomial_fit":
+                mid = (len(arguments.args) - 1) // 2
+                result = func(arguments.args[:mid], arguments.args[mid:-1], arguments.args[-1])
+            elif arguments.operation in ["lagrange_interpolation", "cubic_spline_interpolation", "newton_interpolation"]:
+                mid = (len(arguments.args) - 1) // 2
+                result = func(arguments.args[:mid], arguments.args[mid:-1], arguments.args[-1])
+            elif arguments.operation == "rk4_solve":
+                result = func(arguments.func_str, arguments.y0, arguments.t_start, arguments.t_end, arguments.steps)
+            else:
+                result = func(*arguments.args)
+            console.print(Panel(str(result), title="Numerical Analysis", expand=False, style="bold green"))
+
+        elif arguments.command in ["chemistry", "ch"]:
+            mod = lazy("chemistry")
+            func = getattr(mod, arguments.operation)
+            if arguments.operation == "ideal_gas_law":
+                result = func(p=arguments.p, v=arguments.v, n=arguments.n, t=arguments.t)
+            else:
+                result = func(*arguments.args)
+            console.print(Panel(str(result), title="Chemistry", expand=False, style="bold green"))
+
     except Exception as e:
         console.print(f"[bold red]An error has occurred: {e}[/bold red]")
 
@@ -367,7 +423,8 @@ def run_shell(category, parser):
         'p': 'physics', 'u': 'units', 'm': 'matrix', 'cx': 'complex', 
         's': 'symbolic', 'pl': 'plot', 'd': 'dim', 'pr': 'precise', 'cnv': 'convolve', 'sh': 'sel',
         'nt': 'numtheory', 'cb': 'combo', 'st': 'stats', 'g': 'geo', 'f': 'fin',
-        'sig': 'signal', 'cl': 'calc', 'eq': 'eqn', 'ev': 'eval', 'hi': 'history'
+        'sig': 'signal', 'cl': 'calc', 'eq': 'eqn', 'ev': 'eval', 'hi': 'history',
+        'pb': 'prob', 'lg': 'logic', 'it': 'info', 'nm': 'numerical', 'ch': 'chemistry'
     }
     canonical_category = category_map.get(category, category)
 
@@ -420,6 +477,16 @@ def run_shell(category, parser):
         'ev': ['evaluate'],
         'history': ['list', 'recall', 'search', 'export', 'clear', 'stats'],
         'hi': ['list', 'recall', 'search', 'export', 'clear', 'stats'],
+        'prob': ['normal_pdf', 'normal_cdf', 'normal_ppf', 'binomial_pmf', 'binomial_cdf', 'poisson_pmf', 'poisson_cdf', 'exponential_pdf', 't_test_1samp', 't_test_ind', 'sample_normal', 'sample_binomial'],
+        'pb': ['normal_pdf', 'normal_cdf', 'normal_ppf', 'binomial_pmf', 'binomial_cdf', 'poisson_pmf', 'poisson_cdf', 'exponential_pdf', 't_test_1samp', 't_test_ind', 'sample_normal', 'sample_binomial'],
+        'logic': ['base_convert', 'truth_table', 'simplify_boolean', 'bitwise_and', 'bitwise_or', 'bitwise_xor', 'bitwise_not'],
+        'lg': ['base_convert', 'truth_table', 'simplify_boolean', 'bitwise_and', 'bitwise_or', 'bitwise_xor', 'bitwise_not'],
+        'info': ['shannon_entropy', 'kl_divergence', 'hamming_distance', 'levenshtein_distance', 'cross_entropy', 'mutual_information'],
+        'it': ['shannon_entropy', 'kl_divergence', 'hamming_distance', 'levenshtein_distance', 'cross_entropy', 'mutual_information'],
+        'numerical': ['polynomial_fit', 'lagrange_interpolation', 'cubic_spline_interpolation', 'rk4_solve', 'newton_interpolation'],
+        'nm': ['polynomial_fit', 'lagrange_interpolation', 'cubic_spline_interpolation', 'rk4_solve', 'newton_interpolation'],
+        'chemistry': ['molar_mass', 'ideal_gas_law', 'molarity', 'ph_from_h', 'h_from_ph'],
+        'ch': ['molar_mass', 'ideal_gas_law', 'molarity', 'ph_from_h', 'h_from_ph'],
     }
     
    
@@ -603,6 +670,21 @@ def run_shell(category, parser):
         'history': {
             'list': '--limit 10', 'recall': '--index 1', 'search': '--query add',
             'export': '--filepath history.json', 'clear': '', 'stats': ''
+        },
+        'prob': {
+            'normal_pdf': '0 --mu 0 --sigma 1', 'normal_cdf': '1.96', 't_test_ind': '1 2 3 4 5 2 3 4 5 6'
+        },
+        'logic': {
+            'base_convert': '255 10 16', 'truth_table': 'A & (B | C)', 'simplify_boolean': 'A & A | B'
+        },
+        'info': {
+            'shannon_entropy': '0.5 0.5', 'levenshtein_distance': 'kitten sitting'
+        },
+        'numerical': {
+            'polynomial_fit': '1 2 3 1 4 9 2', 'lagrange_interpolation': '1 2 3 1 4 9 2.5'
+        },
+        'chemistry': {
+            'molar_mass': 'H2O', 'ideal_gas_law': '--p 1 --v 22.4 --n 1'
         }
     }
     
@@ -880,6 +962,48 @@ def main():
     hi.add_argument("--query", default="")
     hi.add_argument("--filepath", default="history.json")
 
+    pb = sub.add_parser("prob", aliases=["pb"])
+    pb.add_argument("operation", choices=[
+        "normal_pdf", "normal_cdf", "normal_ppf", "binomial_pmf", "binomial_cdf",
+        "poisson_pmf", "poisson_cdf", "exponential_pdf", "t_test_1samp",
+        "t_test_ind", "sample_normal", "sample_binomial"
+    ])
+    pb.add_argument("args", type=float, nargs="+")
+
+    lg = sub.add_parser("logic", aliases=["lg"])
+    lg.add_argument("operation", choices=[
+        "base_convert", "truth_table", "simplify_boolean",
+        "bitwise_and", "bitwise_or", "bitwise_xor", "bitwise_not"
+    ])
+    lg.add_argument("args", nargs="+")
+
+    it = sub.add_parser("info", aliases=["it"])
+    it.add_argument("operation", choices=[
+        "shannon_entropy", "kl_divergence", "hamming_distance",
+        "levenshtein_distance", "cross_entropy", "mutual_information"
+    ])
+    it.add_argument("args", nargs="+")
+
+    nm = sub.add_parser("numerical", aliases=["nm"])
+    nm.add_argument("operation", choices=[
+        "polynomial_fit", "lagrange_interpolation", "cubic_spline_interpolation",
+        "rk4_solve", "newton_interpolation"
+    ])
+    nm.add_argument("args", type=float, nargs="*")
+    nm.add_argument("--func_str")
+    nm.add_argument("--y0", type=float)
+    nm.add_argument("--t_start", type=float)
+    nm.add_argument("--t_end", type=float)
+    nm.add_argument("--steps", type=int)
+
+    ch = sub.add_parser("chemistry", aliases=["ch"])
+    ch.add_argument("operation", choices=["molar_mass", "ideal_gas_law", "molarity", "ph_from_h", "h_from_ph"])
+    ch.add_argument("args", nargs="*")
+    ch.add_argument("--p", type=float)
+    ch.add_argument("--v", type=float)
+    ch.add_argument("--n", type=float)
+    ch.add_argument("--t", type=float)
+
     sel = sub.add_parser("sel", aliases=["sh"])
     sel.add_argument("category", choices=[
         "basic", "b", 
@@ -905,7 +1029,12 @@ def main():
         "calc", "cl",
         "eqn", "eq",
         "eval", "ev",
-        "history", "hi"
+        "history", "hi",
+        "prob", "pb",
+        "logic", "lg",
+        "info", "it",
+        "numerical", "nm",
+        "chemistry", "ch"
     ])
 
     
