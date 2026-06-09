@@ -137,7 +137,7 @@ bcalc convert USD EUR 100
 
 ---
 
-## New in v3.0 — 10 Banger Features
+## New Features (v4.1) 
 
 ### 1. **Number Theory** (`numtheory` / `nt`)
 
@@ -328,6 +328,76 @@ bcalc hi stats                    # usage statistics
 
 ---
 
+## New in v3.1 — Scientific Expansion
+
+### 11. **Probability & Distributions** (`prob` / `pb`)
+
+PDFs, CDFs, and statistical tests:
+
+```bash
+bcalc pb normal_pdf 0 --mu 0 --sigma 1     # standard normal PDF
+bcalc pb normal_cdf 1.96                   # ~0.975
+bcalc pb binomial_pmf 5 10 0.5            # 5 heads in 10 flips
+bcalc pb poisson_pmf 2 3                   # k=2, lambda=3
+bcalc pb exponential_pdf 1 2               # x=1, lambda=2
+bcalc pb t_test_1samp 1 2 3 4 5 3.0        # data... popmean
+bcalc pb t_test_ind 1 2 3 2 3 4            # group1... group2
+bcalc pb sample_normal 10 0 1              # 10 random samples
+```
+
+### 12. **Digital Logic** (`logic` / `lg`)
+
+Base conversions and boolean algebra:
+
+```bash
+bcalc lg base_convert 255 10 16            # FF
+bcalc lg base_convert 1010 2 10            # 10
+bcalc lg truth_table "A & (B | C)"         # generate full table
+bcalc lg simplify_boolean "A & A | B"      # A | B
+bcalc lg bitwise_and 12 7                  # 4
+bcalc lg bitwise_xor 12 7                  # 11
+```
+
+### 13. **Information Theory** (`info` / `it`)
+
+Entropy and distance metrics:
+
+```bash
+bcalc it shannon_entropy 0.5 0.5           # 1.0 bit
+bcalc it kl_divergence 0.5 0.5 0.1 0.9     # relative entropy
+bcalc it hamming_distance 1011 1101        # 2
+bcalc it levenshtein_distance kitten sitting # 3
+bcalc it cross_entropy 0.5 0.5 0.4 0.6
+bcalc it mutual_information "[[0.25, 0.25], [0.25, 0.25]]"
+```
+
+### 14. **Numerical Analysis** (`numerical` / `nm`)
+
+Interpolation and ODE solvers:
+
+```bash
+bcalc nm polynomial_fit 1 2 3 1 4 9 2      # x... y... degree
+bcalc nm lagrange_interpolation 1 2 3 1 4 9 2.5
+bcalc nm cubic_spline_interpolation 1 2 3 4 1 8 27 64 2.5
+bcalc nm rk4_solve --func_str "t*y" --y0 1 --t_start 0 --t_end 1 --steps 10
+bcalc nm newton_interpolation 1 2 3 1 4 9 2.5
+```
+
+### 15. **Chemistry** (`chemistry` / `ch`)
+
+Molar mass and gas laws:
+
+```bash
+bcalc ch molar_mass H2O                    # 18.015
+bcalc ch molar_mass H2SO4                  # 98.079
+bcalc ch ideal_gas_law --p 1 --v 22.4 --n 1 # Solve for T
+bcalc ch molarity 0.5 2.0                  # 0.25 M
+bcalc ch ph_from_h 1e-7                    # 7.0
+bcalc ch h_from_ph 3.0                     # 0.001
+```
+
+---
+
 ## Interactive Shell Mode
 
 ```bash
@@ -445,6 +515,11 @@ bcalc -removeAlias bc
 | `eqn` | `eq` |
 | `eval` | `ev` |
 | `history` | `hi` |
+| `prob` | `pb` |
+| `logic` | `lg` |
+| `info` | `it` |
+| `numerical` | `nm` |
+| `chemistry` | `ch` |
 | `sel` | `sh` |
 
 **Example**: `bcalc b add 5 10` instead of `bcalc basic add 5 10`
@@ -464,6 +539,21 @@ bcalc -removeAlias bc
 **Rounding**: `floor`, `ceil`, `round`, `trunc`, `abs`, `sign`  
 **Statistics**: `mean`, `median`, `std`, `var`, `min`, `max`, `sum`, `prod`  
 **Other**: `fact`
+
+### Probability & Distributions
+`normal_pdf`, `normal_cdf`, `normal_ppf`, `binomial_pmf`, `binomial_cdf`, `poisson_pmf`, `poisson_cdf`, `exponential_pdf`, `t_test_1samp`, `t_test_ind`, `sample_normal`, `sample_binomial`
+
+### Digital Logic
+`base_convert`, `truth_table`, `simplify_boolean`, `bitwise_and`, `bitwise_or`, `bitwise_xor`, `bitwise_not`
+
+### Information Theory
+`shannon_entropy`, `kl_divergence`, `hamming_distance`, `levenshtein_distance`, `cross_entropy`, `mutual_information`
+
+### Numerical Analysis
+`polynomial_fit`, `lagrange_interpolation`, `cubic_spline_interpolation`, `rk4_solve`, `newton_interpolation`
+
+### Chemistry
+`molar_mass`, `ideal_gas_law`, `molarity`, `ph_from_h`, `h_from_ph`
 
 ### Number Theory
 `is_prime`, `prime_factors`, `gcd`, `lcm`, `fibonacci`, `nth_prime`, `euler_totient`, `catalan`, `binomial`, `mod_inverse`, `prime_sieve`, `digit_sum`, `reverse_number`, `is_palindrome`, `collatz_steps`, `perfect_number_check`, `goldbach_partitions`
