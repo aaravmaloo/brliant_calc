@@ -23,7 +23,7 @@ A comprehensive calculator for engineers, scientists, and developers with suppor
 - Date & time math (add days/months, date differences, weekdays, Julian days, ages)
 """
 
-__version__ = "4.0.0"
+__version__ = "4.2.0"
 __author__ = "Aarav Maloo"
 __email__ = "aaravmaloo06@gmail.com"
 __description__ = "A powerful CLI scientific calculator with number theory, combinatorics, geometry, finance, signal processing, calculus, equation solving, and more."
