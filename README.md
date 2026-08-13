@@ -396,6 +396,24 @@ bcalc ch ph_from_h 1e-7                    # 7.0
 bcalc ch h_from_ph 3.0                     # 0.001
 ```
 
+### 16. **Date & Time** (`datetime` / `dt`)
+
+Date arithmetic, weekdays, and calendar math:
+
+```bash
+bcalc dt add_days 2024-01-15 30            # 2024-02-14
+bcalc dt add_days today -7                 # one week ago
+bcalc dt add_months 2024-01-31 1           # 2024-02-29 (clamped)
+bcalc dt diff_days 2024-01-01 2024-12-31   # 365 (date2 - date1)
+bcalc dt day_of_week 2024-07-04            # Thursday
+bcalc dt age 2000-01-01                    # age in whole years
+bcalc dt julian_day 2000-01-01              # 2451545
+bcalc dt is_leap_year 2024                 # True
+bcalc dt week_number 2024-01-01            # 1 (ISO week)
+```
+
+**Date formats**: `YYYY-MM-DD` (also `YYYY/MM/DD`, `DD-MM-YYYY`, `DD/MM/YYYY`, `MM/DD/YYYY`) or the keyword `today`.
+
 ---
 
 ## Interactive Shell Mode
@@ -520,6 +538,7 @@ bcalc -removeAlias bc
 | `info` | `it` |
 | `numerical` | `nm` |
 | `chemistry` | `ch` |
+| `datetime` | `dt` |
 | `sel` | `sh` |
 
 **Example**: `bcalc b add 5 10` instead of `bcalc basic add 5 10`
@@ -554,6 +573,9 @@ bcalc -removeAlias bc
 
 ### Chemistry
 `molar_mass`, `ideal_gas_law`, `molarity`, `ph_from_h`, `h_from_ph`
+
+### Date & Time
+`add_days`, `add_months`, `diff_days`, `day_of_week`, `age`, `julian_day`, `is_leap_year`, `week_number`
 
 ### Number Theory
 `is_prime`, `prime_factors`, `gcd`, `lcm`, `fibonacci`, `nth_prime`, `euler_totient`, `catalan`, `binomial`, `mod_inverse`, `prime_sieve`, `digit_sum`, `reverse_number`, `is_palindrome`, `collatz_steps`, `perfect_number_check`, `goldbach_partitions`
