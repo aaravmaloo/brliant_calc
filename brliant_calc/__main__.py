@@ -358,8 +358,10 @@ def execute_command(arguments, user_vars=None):
             func = getattr(mod, arguments.operation)
             if arguments.operation == "ideal_gas_law":
                 result = func(p=arguments.p, v=arguments.v, n=arguments.n, t=arguments.t)
-            else:
+            elif arguments.operation == "molar_mass":
                 result = func(*arguments.args)
+            else:
+                result = func(*(float(a) for a in arguments.args))
             console.print(Panel(str(result), title="Chemistry", expand=False, style="bold green"))
 
         elif arguments.command in ["datetime", "dt"]:
@@ -492,8 +494,16 @@ def run_shell(category, parser):
         'it': ['shannon_entropy', 'kl_divergence', 'hamming_distance', 'levenshtein_distance', 'cross_entropy', 'mutual_information'],
         'numerical': ['polynomial_fit', 'lagrange_interpolation', 'cubic_spline_interpolation', 'rk4_solve', 'newton_interpolation'],
         'nm': ['polynomial_fit', 'lagrange_interpolation', 'cubic_spline_interpolation', 'rk4_solve', 'newton_interpolation'],
-        'chemistry': ['molar_mass', 'ideal_gas_law', 'molarity', 'ph_from_h', 'h_from_ph'],
-        'ch': ['molar_mass', 'ideal_gas_law', 'molarity', 'ph_from_h', 'h_from_ph'],
+        'chemistry': ['molar_mass', 'ideal_gas_law', 'molarity', 'ph_from_h', 'h_from_ph',
+            'dilution', 'molality', 'mole_fraction', 'limiting_reagent',
+            'percent_yield', 'boiling_point_elevation', 'freezing_point_depression',
+            'osmotic_pressure', 'henderson_hasselbalch', 'half_life',
+            'radioactive_decay', 'density', 'ppm_to_concentration', 'molarity_to_ppm'],
+        'ch': ['molar_mass', 'ideal_gas_law', 'molarity', 'ph_from_h', 'h_from_ph',
+            'dilution', 'molality', 'mole_fraction', 'limiting_reagent',
+            'percent_yield', 'boiling_point_elevation', 'freezing_point_depression',
+            'osmotic_pressure', 'henderson_hasselbalch', 'half_life',
+            'radioactive_decay', 'density', 'ppm_to_concentration', 'molarity_to_ppm'],
         'datetime': ['add_days', 'add_months', 'diff_days', 'day_of_week', 'age', 'julian_day', 'is_leap_year', 'week_number'],
         'dt': ['add_days', 'add_months', 'diff_days', 'day_of_week', 'age', 'julian_day', 'is_leap_year', 'week_number'],
     }
@@ -693,7 +703,14 @@ def run_shell(category, parser):
             'polynomial_fit': '1 2 3 1 4 9 2', 'lagrange_interpolation': '1 2 3 1 4 9 2.5'
         },
         'chemistry': {
-            'molar_mass': 'H2O', 'ideal_gas_law': '--p 1 --v 22.4 --n 1'
+            'molar_mass': 'H2O', 'ideal_gas_law': '--p 1 --v 22.4 --n 1',
+            'dilution': '6 0.5 1.5', 'molality': '2 0.5', 'mole_fraction': '2 3',
+            'limiting_reagent': '10 2 6 1', 'percent_yield': '8 10',
+            'boiling_point_elevation': '0.5 0.512', 'freezing_point_depression': '0.5 1.86',
+            'osmotic_pressure': '0.1 298', 'henderson_hasselbalch': '4.76 10',
+            'half_life': '0.1', 'radioactive_decay': '100 0.1 5',
+            'density': '50 25', 'ppm_to_concentration': '100 58.44',
+            'molarity_to_ppm': '0.1 58.44'
         },
         'datetime': {
             'add_days': '2024-01-15 30', 'add_months': '2024-01-31 1',
@@ -1012,7 +1029,13 @@ def main():
     nm.add_argument("--steps", type=int)
 
     ch = sub.add_parser("chemistry", aliases=["ch"])
-    ch.add_argument("operation", choices=["molar_mass", "ideal_gas_law", "molarity", "ph_from_h", "h_from_ph"])
+    ch.add_argument("operation", choices=[
+        "molar_mass", "ideal_gas_law", "molarity", "ph_from_h", "h_from_ph",
+        "dilution", "molality", "mole_fraction", "limiting_reagent",
+        "percent_yield", "boiling_point_elevation", "freezing_point_depression",
+        "osmotic_pressure", "henderson_hasselbalch", "half_life",
+        "radioactive_decay", "density", "ppm_to_concentration", "molarity_to_ppm"
+    ])
     ch.add_argument("args", nargs="*")
     ch.add_argument("--p", type=float)
     ch.add_argument("--v", type=float)

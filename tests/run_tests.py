@@ -14,6 +14,7 @@ from tests.test_precision_ops import TestPrecisionOperations
 from tests.test_security import TestSecurityFeatures
 from tests.test_convolution import TestConvolution
 from tests.test_date_time import TestDateAndTimeOperations
+from tests.test_chemistry import TestChemistryOperations
 
 def run_all_tests():
     loader = unittest.TestLoader()
@@ -29,6 +30,7 @@ def run_all_tests():
     suite.addTests(loader.loadTestsFromTestCase(TestSecurityFeatures))
     suite.addTests(loader.loadTestsFromTestCase(TestConvolution))
     suite.addTests(loader.loadTestsFromTestCase(TestDateAndTimeOperations))
+    suite.addTests(loader.loadTestsFromTestCase(TestChemistryOperations))
     
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)

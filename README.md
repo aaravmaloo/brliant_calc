@@ -394,7 +394,25 @@ bcalc ch ideal_gas_law --p 1 --v 22.4 --n 1 # Solve for T
 bcalc ch molarity 0.5 2.0                  # 0.25 M
 bcalc ch ph_from_h 1e-7                    # 7.0
 bcalc ch h_from_ph 3.0                     # 0.001
+
+# Solution chemistry, stoichiometry & kinetics
+bcalc ch dilution 6 0.5 1.5                # M1V1=M2V2 → V2 = 2.0
+bcalc ch molality 2 0.5                    # 4.0 mol/kg
+bcalc ch mole_fraction 2 3                 # 0.4
+bcalc ch limiting_reagent 10 2 6 1         # reagent 1 limiting
+bcalc ch percent_yield 8 10                # 80.0%
+bcalc ch boiling_point_elevation 0.5 0.512 # 0.256 °C
+bcalc ch freezing_point_depression 0.5 1.86
+bcalc ch osmotic_pressure 0.1 298          # Π = MRT (atm)
+bcalc ch henderson_hasselbalch 4.76 10     # pH = pKa + log10(ratio)
+bcalc ch half_life 0.1                     # t½ = ln(2)/k
+bcalc ch radioactive_decay 100 0.1 5       # N = N₀·e^(-kt)
+bcalc ch density 50 25                     # 2.0 g/mL
+bcalc ch ppm_to_concentration 100 58.44    # 0.001711 mol/L
+bcalc ch molarity_to_ppm 0.1 58.44         # 5844 ppm
 ```
+
+**Note**: `limiting_reagent` takes alternating (amount, coefficient) pairs, e.g. `10 2 6 1` means reagent 1 has 10 mol with coefficient 2, reagent 2 has 6 mol with coefficient 1. `osmotic_pressure` expects temperature in Kelvin.
 
 ### 16. **Date & Time** (`datetime` / `dt`)
 
@@ -572,7 +590,7 @@ bcalc -removeAlias bc
 `polynomial_fit`, `lagrange_interpolation`, `cubic_spline_interpolation`, `rk4_solve`, `newton_interpolation`
 
 ### Chemistry
-`molar_mass`, `ideal_gas_law`, `molarity`, `ph_from_h`, `h_from_ph`
+`molar_mass`, `ideal_gas_law`, `molarity`, `ph_from_h`, `h_from_ph`, `dilution`, `molality`, `mole_fraction`, `limiting_reagent`, `percent_yield`, `boiling_point_elevation`, `freezing_point_depression`, `osmotic_pressure`, `henderson_hasselbalch`, `half_life`, `radioactive_decay`, `density`, `ppm_to_concentration`, `molarity_to_ppm`
 
 ### Date & Time
 `add_days`, `add_months`, `diff_days`, `day_of_week`, `age`, `julian_day`, `is_leap_year`, `week_number`
