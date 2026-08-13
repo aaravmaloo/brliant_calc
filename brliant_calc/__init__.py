@@ -20,6 +20,7 @@ A comprehensive calculator for engineers, scientists, and developers with suppor
 - Equation solving (quadratic, cubic, bisection, Newton-Raphson)
 - Expression evaluation (safe AST-based math expression parser)
 - Calculation history (save, search, export, stats)
+- Date & time math (add days/months, date differences, weekdays, Julian days, ages)
 """
 
 __version__ = "4.0.0"

@@ -362,6 +362,12 @@ def execute_command(arguments, user_vars=None):
                 result = func(*arguments.args)
             console.print(Panel(str(result), title="Chemistry", expand=False, style="bold green"))
 
+        elif arguments.command in ["datetime", "dt"]:
+            mod = lazy("date_time")
+            func = getattr(mod, arguments.operation)
+            result = func(*arguments.args)
+            console.print(Panel(str(result), title="Date & Time", expand=False, style="bold cyan"))
+
     except Exception as e:
         console.print(f"[bold red]An error has occurred: {e}[/bold red]")
 
@@ -424,7 +430,8 @@ def run_shell(category, parser):
         's': 'symbolic', 'pl': 'plot', 'd': 'dim', 'pr': 'precise', 'cnv': 'convolve', 'sh': 'sel',
         'nt': 'numtheory', 'cb': 'combo', 'st': 'stats', 'g': 'geo', 'f': 'fin',
         'sig': 'signal', 'cl': 'calc', 'eq': 'eqn', 'ev': 'eval', 'hi': 'history',
-        'pb': 'prob', 'lg': 'logic', 'it': 'info', 'nm': 'numerical', 'ch': 'chemistry'
+        'pb': 'prob', 'lg': 'logic', 'it': 'info', 'nm': 'numerical', 'ch': 'chemistry',
+        'dt': 'datetime'
     }
     canonical_category = category_map.get(category, category)
 
@@ -487,6 +494,8 @@ def run_shell(category, parser):
         'nm': ['polynomial_fit', 'lagrange_interpolation', 'cubic_spline_interpolation', 'rk4_solve', 'newton_interpolation'],
         'chemistry': ['molar_mass', 'ideal_gas_law', 'molarity', 'ph_from_h', 'h_from_ph'],
         'ch': ['molar_mass', 'ideal_gas_law', 'molarity', 'ph_from_h', 'h_from_ph'],
+        'datetime': ['add_days', 'add_months', 'diff_days', 'day_of_week', 'age', 'julian_day', 'is_leap_year', 'week_number'],
+        'dt': ['add_days', 'add_months', 'diff_days', 'day_of_week', 'age', 'julian_day', 'is_leap_year', 'week_number'],
     }
     
    
@@ -685,6 +694,12 @@ def run_shell(category, parser):
         },
         'chemistry': {
             'molar_mass': 'H2O', 'ideal_gas_law': '--p 1 --v 22.4 --n 1'
+        },
+        'datetime': {
+            'add_days': '2024-01-15 30', 'add_months': '2024-01-31 1',
+            'diff_days': '2024-01-01 2024-12-31', 'day_of_week': '2024-07-04',
+            'age': '2000-01-01', 'julian_day': '2000-01-01',
+            'is_leap_year': '2024', 'week_number': '2024-01-01'
         }
     }
     
@@ -1004,6 +1019,13 @@ def main():
     ch.add_argument("--n", type=float)
     ch.add_argument("--t", type=float)
 
+    dt = sub.add_parser("datetime", aliases=["dt"])
+    dt.add_argument("operation", choices=[
+        "add_days", "add_months", "diff_days", "day_of_week",
+        "age", "julian_day", "is_leap_year", "week_number"
+    ])
+    dt.add_argument("args", nargs="+")
+
     sel = sub.add_parser("sel", aliases=["sh"])
     sel.add_argument("category", choices=[
         "basic", "b", 
@@ -1034,7 +1056,8 @@ def main():
         "logic", "lg",
         "info", "it",
         "numerical", "nm",
-        "chemistry", "ch"
+        "chemistry", "ch",
+        "datetime", "dt"
     ])
 
     
